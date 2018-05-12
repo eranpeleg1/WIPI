@@ -187,7 +187,7 @@ If you're on a Mac, there are a few errors that users sometimes see when attempt
 * "non-zero exit code: 107"
 * "You may need to install Xcode" but it is already installed
 * and others
-
+ss
 There are a few steps you may want to take to troubleshoot these kinds of errors:
 
 1. Make sure Xcode is installed and open it to accept the license agreement if it prompts you. You can install it from the Mac App Store.
