@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name":"WIPI",
+    "version":"1.0.0",
+    "sdkVersion": "27.0.0",
+    "icon":"./assets/appIcon.png",
+    "splash": {
+      "image": "./assets/wipiSplashBackground.png",
+      "backgroundColor":"#3B9BFF"
+    },
+    "ios": {
+      "bundleIdentifier": "com.WIPI.WIPI"
+    },
+    "android": {
+      "package": "com.WIPI.WIPI",
+      "config":{
+        "googleSignIn":{
+          "certificateHash":"878CFEF53BE9BA32BE70ADB1CD32AC38877D1F17",
+          "apiKey":"AIzaSyAtYKnX6s38g9jftKD_HPr2w7pfrHXOr3o"
+        },
+        "googleMaps":{
+          "apiKey":"AIzaSyAtYKnX6s38g9jftKD_HPr2w7pfrHXOr3o"
+        }
+      }
+    }
+  }
+}
