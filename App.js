@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Splash from './Splash.js'
-import Home from './Home.js'
+import HomeNavigation from './HomeNavigation.js'
 import Login from './Login.js'
 import * as firebase from "firebase/index";
 import * as firestore from 'firebase/firestore';
@@ -33,7 +33,7 @@ export default class App extends React.Component {
                 if (this.state.nextPage==='login'){
                     this.storeUserDetails(user.uid, user.displayName)
                 }
-                nextPage='home';
+                nextPage='HomeNavigation';
             }
             this.setState({nextPage});
         })
@@ -62,8 +62,8 @@ export default class App extends React.Component {
             case 'login':
                 page=<Login handler = {this.handler}/>;
                 break;
-            case 'home':
-                page=<Home/>;
+            case 'HomeNavigation':
+                page=<HomeNavigation/>;
                 break;
         }
         return (
