@@ -118,7 +118,7 @@ export default class Home extends React.Component {
          let coords=this.state.locations[MY_INDEX].coords;
         if (coords!==null) {
             return(
-                <View style={{ flex: 1,marginTop:24}}>
+                <View style={{ flex: 1,paddingTop:Constants.statusBarHeight}}>
                     <View style={{ flex: 1}}>
                         <GoogleAutocomplete setAddressOfHome={this.setAddress}/>
                         <MapView
@@ -137,12 +137,9 @@ export default class Home extends React.Component {
                             }}
                             onMapReady={()=>this.myPlace()}
                            >
-
                         </MapView>
-                        <View style={styles.navigator}>
-                        </View>
                     </View>
-                    <SubView showValue={250}
+                    <SubView showValue={300}
                              hideValue={50}
                              show={this.state.parkingMode}
                              endPark={this.endPark}

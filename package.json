@@ -26,6 +26,7 @@
     "react-native": "~0.55.2",
     "react-native-elevated-view": "0.0.6",
     "react-native-google-places-autocomplete": "^1.3.6",
+    "react-native-material-bottom-navigation": "^0.9.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.0.1"
   }

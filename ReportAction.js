@@ -1,16 +1,12 @@
 import React from 'react';
-
-
-import { StyleSheet, Text, View,TouchableOpacity,Animated ,} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
 export default class ReportAction extends React.Component {
-
-
     render() {
         return (
             <View style={styles.container}>
-                <Text>
-                    {'this is a Report Action page!!!!!!!'}
+                <Text style={styles.text}>
+                    {'this is a Report action page!!!!!!!'}
                 </Text>
             </View>
         )
@@ -19,10 +15,10 @@ export default class ReportAction extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex:1,
         alignItems: 'center',
         justifyContent:'center',
-        backgroundColor:'red',
+        backgroundColor:'pink',
     },
     text:{
         fontWeight: 'bold',
@@ -30,3 +26,5 @@ const styles = StyleSheet.create({
         fontSize:30
     }
 });
+
+

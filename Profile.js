@@ -1,15 +1,11 @@
 import React from 'react';
-
-
-import { StyleSheet, Text, View,TouchableOpacity,Animated ,} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
 export default class Profile extends React.Component {
-
-
     render() {
         return (
             <View style={styles.container}>
-                <Text>
+                <Text style={styles.text}>
                     {'this is a profile page!!!!!!!'}
                 </Text>
             </View>
@@ -19,10 +15,10 @@ export default class Profile extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex:1,
         alignItems: 'center',
         justifyContent:'center',
-        backgroundColor:'pink',
+        backgroundColor:'blue',
     },
     text:{
         fontWeight: 'bold',
