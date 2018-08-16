@@ -87,7 +87,66 @@ export default class SubView extends React.Component {
 
 }
 
+
+
 const styles = StyleSheet.create({
+    buttonContainer:{
+        position:'absolute',
+        top:14,
+        right:13,
+        height:58,
+        width:58,
+        elevation:4,
+        backgroundColor: 'transparent',
+        borderRadius:29,
+        justifyContent:'center',
+        alignItems: 'center',
+        paddingTop:1,
+        margin:7,
+    },
+    button: {
+        backgroundColor:'#FF6E69',
+        borderWidth: 0,
+        height: 56,
+        width: 56,
+        borderRadius: 28,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: "#000000",
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        shadowOffset: {
+            height: 2.3,
+            width: 0
+        },
+        bottom:1,
+        elevation:2,
+        zIndex:3
+
+
+    },
+
+
+
+    subView: {
+        position: "absolute",
+        bottom:50,
+        left: 0,
+        right: 0,
+        zIndex:10,
+        backgroundColor:'transparent',
+        elevation:10
+    },
+    address:{
+        position: "absolute",
+        top:4,
+        left:15,
+
+    }
+});
+
+
+const stylesShadowWithView = StyleSheet.create({
     buttonContainer:{
         position:'absolute',
         top:14,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { StackNavigator, TabNavigator } from 'react-navigation'; // 1.0.0-beta.23
+import { StackNavigator, createBottomTabNavigator } from 'react-navigation'; // 1.0.0-beta.23
 import { NavigationComponent } from 'react-native-material-bottom-navigation'; // 0.7.0
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // 6.2.2
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +11,7 @@ import ReportAction from './ReportAction.js'
 import Profile from './Profile.js'
 
 
-const MainTabNavigator = TabNavigator(
+const MainTabNavigator = createBottomTabNavigator(
     {
         ReportAction: {
             screen: ReportAction,

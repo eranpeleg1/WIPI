@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View,TouchableOpacity,Animated ,} from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity,Animated ,Platform} from 'react-native';
 import { Constants, Location, Permissions,MapView,Components } from 'expo';
 const carLogo=require("./assets/carSmall.png");
 import * as firestore from 'firebase/firestore';
@@ -98,6 +98,7 @@ export default class Home extends React.Component {
 
     myPlace = async () => {
          let location = await this.getLocationAsync();
+        console.log("location",location)
 
         this.map.animateToRegion(
             {
@@ -106,16 +107,20 @@ export default class Home extends React.Component {
                 latitudeDelta: 0.001,
                 longitudeDelta: 0.001,
             },
-            1000
+
         );
         searchedLocation=this.state.locations[SEARCHED_INDEX];
+        console.log('searchedLocation',searchedLocation);
+
         this.setState({locationIndex:0,locations:[{coords:location.coords,address:location.address},{coords:searchedLocation.coords,address:searchedLocation.address}]});
     }
 
     render() {
          console.log("render",this.state);
          let index=this.state.locationIndex;
-         let coords=this.state.locations[MY_INDEX].coords;
+         let coords=this.state.locations[MY_INDEX].coords
+         let iosButtonShadowProps = Platform.OS==='ios' ? styles.iosButtonShadowProps : {};
+         console.log(StyleSheet.flatten(iosButtonShadowProps));
         if (coords!==null) {
             return(
                 <View style={{ flex: 1,paddingTop:Constants.statusBarHeight}}>
@@ -150,7 +155,7 @@ export default class Home extends React.Component {
                     <View style={styles.buttons}>
                         <View style={styles.mapButtonContainer}>
                             <TouchableOpacity
-                                style={[styles.mapButton,styles.locationButton]}
+                                style={[styles.mapButton,styles.locationButton,iosButtonShadowProps]}
                                 onPress={this.myPlace}
                                 activeOpacity={0.8}
                             >
@@ -164,7 +169,7 @@ export default class Home extends React.Component {
                         </View>
                         <View style={styles.mapButtonContainer}>
                             <TouchableOpacity
-                                style={[styles.mapButton,styles.parkButton]}
+                                style={[styles.mapButton,styles.parkButton,iosButtonShadowProps]}
                                 onPress={ () => this.park() }
                                 activeOpacity={0.8}
                             >
@@ -230,19 +235,21 @@ const styles = StyleSheet.create({
         borderRadius: 28,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: "#000000",
-        shadowOpacity: 0.7,
-        shadowRadius: 2,
-        shadowOffset: {
-            height: 1,
-            width: 1
-        },
         bottom:1,
         elevation:2,
-        zIndex:3
+        zIndex:3,
+    },
+    iosButtonShadowProps: {
+        shadowColor: "#000000",
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        shadowOffset: {
+            height: 2.3,
+            width: 0
+        }
     },
     parkButton:{
-        backgroundColor:'#3B9BFF'
+        backgroundColor:'#3C9BFF'
     },
 
     locationButton:{
