@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "wipi",
+    "description": "A very interesting project.",
+    "slug": "wipi",
+    "privacy": "public",
+    "sdkVersion": "29.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#3B9BFF"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.WIPI.WIPI",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.WIPI.WIPI",
+      "config": {
+        "googleSignIn": {
+          "certificateHash": "878CFEF53BE9BA32BE70ADB1CD32AC38877D1F17",
+          "apiKey": "AIzaSyAtYKnX6s38g9jftKD_HPr2w7pfrHXOr3o"
+        },
+        "googleMaps": {
+          "apiKey": "AIzaSyAtYKnX6s38g9jftKD_HPr2w7pfrHXOr3o"
+        }
+      }
+    }
+  }
+}
