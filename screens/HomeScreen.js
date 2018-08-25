@@ -51,19 +51,19 @@ export default class HomeScreen extends Component {
     };
 
     myPlace = async () => {
-        let {location,mapRegion,address} = await this._getLocationAsync();
-
+        let {location,address,hasLocationPermissions} = await this._getLocationAsync();
         this.map.animateToRegion(
             {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
                 latitudeDelta: 0.001,
                 longitudeDelta: 0.001,
-            },
-            1000
+            }
         );
 
+        setTimeout(()=>this.setState({location,address,hasLocationPermissions}),501);
     }
+
 
     render() {
         return (
