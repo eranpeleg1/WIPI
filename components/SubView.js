@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity,Animated } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, TouchableOpacity,Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export default class SubView extends React.Component {
     constructor(props) {
@@ -44,11 +44,10 @@ export default class SubView extends React.Component {
         let mainText='';
         let secondaryText='';
         let address=this.props.address;
-        if (address!==null ){
+        if (address!==undefined && address!==null ){
             mainText=address.structured_formatting.main_text;
             secondaryText=address.structured_formatting.secondary_text;
         }
-        let opacity
         return (
                 <Animated.View
                     style={[styles.subView,{height:this.props.height},
@@ -125,9 +124,6 @@ const styles = StyleSheet.create({
         elevation:2,
 
     },
-
-
-
     subView: {
         position: "absolute",
         bottom:50,

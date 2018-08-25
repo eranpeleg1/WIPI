@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet,Dimensions } from 'react-native';
+import { Text, View, StyleSheet,Dimensions,TouchableOpacity } from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 let {height,width} = Dimensions.get('window');
+import Icon from 'react-native-vector-icons/MaterialIcons';
 export default class HomeScreen extends Component {
     state = {
         mapRegion: null,
@@ -13,7 +14,12 @@ export default class HomeScreen extends Component {
     };
 
     componentDidMount() {
-        this._getLocationAsync();
+        let {location,mapRegion,address} = this._getLocationAsync();
+        this.setState({location,address,mapRegion});
+    }
+
+    park(){
+        this.setState({parkingMode:true})
     }
     endPark=()=>{
         this.setState({parkingMode:false})
@@ -39,11 +45,29 @@ export default class HomeScreen extends Component {
                 secondary_text:tempAddress.city+", "+tempAddress.country
             }
         }
-        this.setState({location,address});
-
-        // Center the map on the location we just fetched.
-        this.setState({mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.001, longitudeDelta: 0.001 }});
+        let mapRegion = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001
+        }
+        return {location,address,mapRegion};
     };
+
+    myPlace = async () => {
+        let {location,mapRegion,address} = await this._getLocationAsync();
+
+        this.map.animateToRegion(
+            {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
+            },
+            1000
+        );
+        this.setState({location,address,mapRegion});
+    }
 
     render() {
         return (
@@ -75,6 +99,33 @@ export default class HomeScreen extends Component {
                          backgroundColor={'#3B9BFF'}
                          address={this.state.address}
                 />
+                <View style={styles.buttons}>
+                    <View style={styles.mapButtonContainer}>
+                        <TouchableOpacity
+                            style={[styles.mapButton,styles.locationButton]}
+                            onPress={this.myPlace}
+                            activeOpacity={0.8}
+                        >
+                            <Icon
+                                name="my-location"
+                                backgroundColor='white'
+                                size={24}
+                                color='black'
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.mapButtonContainer}>
+                        <TouchableOpacity
+                            style={[styles.mapButton,styles.parkButton]}
+                            onPress={ () => this.park() }
+                            activeOpacity={0.8}
+                        >
+                            <Text style={{fontWeight: 'bold', color: 'white', fontSize:30}}>
+                                P
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         );
     }
@@ -87,6 +138,46 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#ecf0f1',
+    },
+    buttons:{
+        position: 'absolute',
+        bottom: '17%',
+        right:13
+    },
+    mapButtonContainer:{
+        height:58,
+        width:58,
+        elevation:4,
+        backgroundColor: 'transparent',
+        justifyContent:'center',
+        alignItems: 'center',
+        paddingTop:1,
+        margin:7
+    },
+    mapButton: {
+        borderWidth: 0,
+        height: 56,
+        width: 56,
+        borderRadius: 28,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: "#000000",
+        shadowOpacity: 0.7,
+        shadowRadius: 2,
+        shadowOffset: {
+            height: 1,
+            width: 1
+        },
+        bottom:1,
+        elevation:2,
+        zIndex:3
+    },
+    parkButton:{
+        backgroundColor:'#3B9BFF'
+    },
+
+    locationButton:{
+        backgroundColor:'white',
     },
 });
 
