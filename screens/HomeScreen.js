@@ -13,9 +13,9 @@ export default class HomeScreen extends Component {
         address: null
     };
 
-    componentDidMount() {
-        let {location,mapRegion,address} = this._getLocationAsync();
-        this.setState({location,address,mapRegion});
+    async componentDidMount() {
+        let {location,mapRegion,address,hasLocationPermissions} = await this._getLocationAsync();
+        this.setState({location,address,mapRegion,hasLocationPermissions});
     }
 
     park(){
@@ -28,30 +28,26 @@ export default class HomeScreen extends Component {
 
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            this.setState({
-                location: 'Permission to access location was denied',
-            });
-        } else {
-            this.setState({ hasLocationPermissions: true });
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        let tempAddress = await Location.reverseGeocodeAsync(location.coords);
-        tempAddress=tempAddress[0];
-        let address={
-            structured_formatting:{
-                main_text:tempAddress.street+" "+tempAddress.name,
-                secondary_text:tempAddress.city+", "+tempAddress.country
+        let hasLocationPermissions =  (status === 'granted');
+        let mapRegion,location,address;
+        if (hasLocationPermissions) {
+            location = await Location.getCurrentPositionAsync({});
+            let tempAddress = await Location.reverseGeocodeAsync(location.coords);
+            tempAddress=tempAddress[0];
+            address={
+                structured_formatting:{
+                    main_text:tempAddress.street+" "+tempAddress.name,
+                    secondary_text:tempAddress.city+", "+tempAddress.country
+                }
+            }
+            mapRegion = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001
             }
         }
-        let mapRegion = {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001
-        }
-        return {location,address,mapRegion};
+        return {location,address,mapRegion,hasLocationPermissions};
     };
 
     myPlace = async () => {
@@ -66,7 +62,7 @@ export default class HomeScreen extends Component {
             },
             1000
         );
-        this.setState({location,address,mapRegion});
+
     }
 
     render() {

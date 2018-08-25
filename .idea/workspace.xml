@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="194736fc-328b-4933-8a15-985fb3a26463" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/components/SubView.js" afterPath="$PROJECT_DIR$/components/SubView.js" />
       <change beforePath="$PROJECT_DIR$/screens/HomeScreen.js" afterPath="$PROJECT_DIR$/screens/HomeScreen.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -18,24 +17,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HomeScreen.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="HomeScreen.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/screens/HomeScreen.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="93" column="24" lean-forward="false" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="24" />
+            <state relative-caret-position="240">
+              <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
-                <element signature="e#784#834#0" expanded="false" />
+                <element signature="e#776#825#0" expanded="false" />
+                <element signature="e#842#892#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SubView.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SubView.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/components/SubView.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+            <state relative-caret-position="3560">
+              <caret line="132" column="12" lean-forward="true" selection-start-line="132" selection-start-column="12" selection-end-line="132" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -163,8 +163,8 @@
         <option value="$PROJECT_DIR$/components/GoogleAutocomplete.js" />
         <option value="$PROJECT_DIR$/node_modules/@firebase/firestore/dist/packages/firestore/src/platform_browser/browser_platform.d.ts" />
         <option value="$PROJECT_DIR$/components/WipiMap.js" />
-        <option value="$PROJECT_DIR$/screens/HomeScreen.js" />
         <option value="$PROJECT_DIR$/components/SubView.js" />
+        <option value="$PROJECT_DIR$/screens/HomeScreen.js" />
       </list>
     </option>
   </component>
@@ -288,12 +288,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534579071825</updated>
-      <workItem from="1534579073251" duration="37675000" />
+      <workItem from="1534579073251" duration="38779000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37675000" />
+    <option name="totallyTimeSpent" value="38779000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-5" y="5" width="1918" height="1038" extended-state="0" />
@@ -570,22 +570,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/screens/HomeScreen.js">
+    <entry file="file://$PROJECT_DIR$/components/SubView.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="93" column="24" lean-forward="false" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-            <element signature="e#784#834#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="3560">
+          <caret line="132" column="12" lean-forward="true" selection-start-line="132" selection-start-column="12" selection-end-line="132" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/SubView.js">
+    <entry file="file://$PROJECT_DIR$/screens/HomeScreen.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="240">
+          <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#776#825#0" expanded="false" />
+            <element signature="e#842#892#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
