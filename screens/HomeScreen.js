@@ -1,34 +1,45 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet,Dimensions } from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
-
+import SubView from "../components/SubView"
+let {height,width} = Dimensions.get('window');
 export default class HomeScreen extends Component {
     state = {
         mapRegion: null,
         hasLocationPermissions: false,
-        locationResult: null
+        location: null,
+        parkingMode:false,
+        address: null
     };
 
     componentDidMount() {
         this._getLocationAsync();
     }
+    endPark=()=>{
+        this.setState({parkingMode:false})
+    }
 
-    _handleMapRegionChange = mapRegion => {
-        console.log(mapRegion);
-    };
 
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
-                locationResult: 'Permission to access location was denied',
+                location: 'Permission to access location was denied',
             });
         } else {
             this.setState({ hasLocationPermissions: true });
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        this.setState({ locationResult: JSON.stringify(location) });
+        let tempAddress = await Location.reverseGeocodeAsync(location.coords);
+        tempAddress=tempAddress[0];
+        let address={
+            structured_formatting:{
+                main_text:tempAddress.street+" "+tempAddress.name,
+                secondary_text:tempAddress.city+", "+tempAddress.country
+            }
+        }
+        this.setState({location,address});
 
         // Center the map on the location we just fetched.
         this.setState({mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.001, longitudeDelta: 0.001 }});
@@ -37,32 +48,33 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.paragraph}>
-                    Pan, zoom, and tap on the map!
-                </Text>
-
                 {
-                    this.state.locationResult === null ?
+                    this.state.location === null ?
                         <Text>Finding your current location...</Text> :
                         this.state.hasLocationPermissions === false ?
                             <Text>Location permissions are not granted.</Text> :
                             this.state.mapRegion === null ?
                                 <Text>Map region doesn't exist.</Text> :
-                                <MapView
-                                    ref={map => this.map = map}
-                                    provider="google"
-                                    customMapStyle={mapStyle}
-                                    style={{ alignSelf: 'stretch', height: 400 }}
-                                    region={this.state.mapRegion}
-                                    showsUserLocation= {true}
-                                    showsMyLocationButton = {false}
-                                    followsUserLocation= {true}
-                                />
-                }
+                                    <MapView
+                                        ref={map => this.map = map}
+                                        provider="google"
+                                        customMapStyle={mapStyle}
+                                        style={{ alignSelf: 'stretch', height: height}}
+                                        region={this.state.mapRegion}
+                                        showsUserLocation= {true}
+                                        showsMyLocationButton = {false}
+                                        followsUserLocation= {true}
+                                    />
 
-                <Text>
-                    Location: {this.state.locationResult}
-                </Text>
+                }
+                <SubView showValue={300}
+                         hideValue={50}
+                         show={this.state.parkingMode}
+                         endPark={this.endPark}
+                         height={300}
+                         backgroundColor={'#3B9BFF'}
+                         address={this.state.address}
+                />
             </View>
         );
     }
@@ -75,13 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#ecf0f1',
-    },
-    paragraph: {
-        margin: 24,
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#34495e',
     },
 });
 
