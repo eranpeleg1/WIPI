@@ -28,8 +28,10 @@ export default class HomeScreen extends Component {
                 longitude: 55
             })
         })
-            .then(response => console.log(response))
-        this.setState({parkingMode:true})
+            .then(response => {
+                console.log(response)
+                this.setState({parkingMode:true})
+            })
     }
     endPark=()=>{
         this.setState({parkingMode:false})
