@@ -20,20 +20,36 @@ export default class HomeScreen extends Component {
     }
 
     park(){
-        console.log("park");
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-                userId: "noam",
-                latitude: 55,
-                longitude: 55
+                "userId": 'nnn',
+                "latitude": 55,
+                "longitude": 55
             })
+        }).then(response => {
+            console.log(response);
+            this.setState({parkingMode: true})
         })
-            .then(response => console.log(response))
-        this.setState({parkingMode:true})
     }
-    endPark=()=>{
-        this.setState({parkingMode:false})
+    endPark= ()=> {
+        fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": 'nnn'
+            })
+        }).then(response => {
+            console.log(response);
+            this.setState({parkingMode: false})
+        })
     }
 
 
