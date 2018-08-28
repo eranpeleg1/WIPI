@@ -35,6 +35,13 @@ export default class HomeScreen extends Component {
             console.log(response);
             this.setState({parkingMode: true})
         })
+<<<<<<< HEAD
+=======
+            .then(response => {
+                console.log(response)
+                this.setState({parkingMode:true})
+            })
+>>>>>>> 64df3ba7ef5cd4b9f25f410bcf9c6914f869be89
     }
     endPark= ()=> {
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
