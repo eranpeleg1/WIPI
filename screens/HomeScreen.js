@@ -4,6 +4,7 @@ import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 let {height,width} = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 export default class HomeScreen extends Component {
     state = {
         mapRegion: null,
