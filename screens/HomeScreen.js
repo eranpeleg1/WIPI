@@ -11,7 +11,8 @@ export default class HomeScreen extends Component {
         hasLocationPermissions: false,
         location: null,
         parkingMode:false,
-        address: null
+        address: null,
+        loggedInUserId:this.props.navigation.getParam('userId', null)
     };
 
     async componentDidMount() {
@@ -20,6 +21,8 @@ export default class HomeScreen extends Component {
     }
 
     park(){
+        console.log("this.props.navigation",this.props.navigation);
+        console.log('user id is (from park) ',this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
             headers: {
@@ -27,21 +30,14 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": 'nnn',
-                "latitude": 55,
-                "longitude": 55
+                "userId": this.state.userId,
+                "latitude": 45,
+                "longitude":555
             })
         }).then(response => {
-            console.log(response);
+            // console.log(response);
             this.setState({parkingMode: true})
         })
-<<<<<<< HEAD
-=======
-            .then(response => {
-                console.log(response)
-                this.setState({parkingMode:true})
-            })
->>>>>>> 64df3ba7ef5cd4b9f25f410bcf9c6914f869be89
     }
     endPark= ()=> {
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
@@ -51,10 +47,10 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": 'nnn'
+                "userId": this.state.userId
             })
         }).then(response => {
-            console.log(response);
+            // console.log(response);
             this.setState({parkingMode: false})
         })
     }

@@ -11,7 +11,12 @@ export default class AuthLoadingScreen extends React.Component {
     _bootstrapAsync = async () => {
         console.log("handler: "+this);
         firebase.auth().onAuthStateChanged((user)=>{
-            this.props.navigation.navigate(user ? 'Main' : 'Login');
+            user
+                ?
+                this.props.navigation.navigate('Main',{userId:user.uid})
+                :
+                this.props.navigation.navigate('Login')
+
         })
     }
 
