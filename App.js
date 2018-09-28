@@ -5,6 +5,9 @@ import AppNavigator from './navigation/AppNavigator';
 import * as firebase from "firebase";
 import LoginScreen from "./screens/LoginScreen";
 
+
+import{store} from './redux/wipi-redux';
+import {Provider} from 'react-redux';
 export default class App extends React.Component {
     constructor(props){
         super(props);
@@ -30,19 +33,24 @@ export default class App extends React.Component {
     render() {
         let screen;
         if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
-            screen = <AppLoading
+            return(
+             <AppLoading
                 startAsync={this._loadResourcesAsync}
                 onError={this._handleLoadingError}
                 onFinish={this._handleFinishLoading}
             />
-
+            )
         } else {
-            screen = <View style={styles.container}>
-                {Platform.OS === 'ios' && <StatusBar barStyle="default"/>}
-                <AppNavigator/>
+            return (
+                <Provier store={store}>
+                    <View style={styles.container}>
+                        {Platform.OS === 'ios' && <StatusBar barStyle="default"/>}
+                        <AppNavigator/>
             </View>
+                </Provier>
+
+            )
         }
-        return (screen);
     }
 
     _loadResourcesAsync = async () => {
