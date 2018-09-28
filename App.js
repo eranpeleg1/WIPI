@@ -42,12 +42,12 @@ export default class App extends React.Component {
             )
         } else {
             return (
-                <Provier store={store}>
+                <Provider store={store}>
                     <View style={styles.container}>
                         {Platform.OS === 'ios' && <StatusBar barStyle="default"/>}
                         <AppNavigator/>
             </View>
-                </Provier>
+                </Provider>
 
             )
         }
