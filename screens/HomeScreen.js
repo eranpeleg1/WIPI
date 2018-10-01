@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput} from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
-let {height,width} = Dimensions.get('window');
+import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+let {height,width} = Dimensions.get('window');
 
 export default class HomeScreen extends Component {
     static navigationOptions = {
@@ -23,8 +24,10 @@ export default class HomeScreen extends Component {
     };
 
     async componentDidMount() {
-        let {location,mapRegion,address,hasLocationPermissions} = await this._getLocationAsync();
-        this.setState({location,address,mapRegion,hasLocationPermissions});
+        if (address===null) {
+            let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
+            this.setState({location, address, mapRegion, hasLocationPermissions});
+        }
     }
 
     park(){
@@ -174,13 +177,9 @@ export default class HomeScreen extends Component {
                 break
             case 'AutoComplete':
                 res = ( <View style={styles.container}>
-                        <Text style={{fontWeight: 'bold', color: 'white', fontSize: 30}}>
-                            AutoComplete
-                        </Text>
+                        <GoogleAutoComplete setAddressOfHome={(address)=>{this.setState({address})}}/>
                     </View>
                 )
-
-
         }
         return res
     }

@@ -21,12 +21,6 @@ export default class GoogleAutocomplete extends React.Component {
                 currentLocation={false}
                 textInputHide={false}
                 styles={styles}
-                textInputProps={{
-                    onChangeText:(text)=>{
-                            styles.container={flex:0,height:1000};
-                        }
-                    }
-                }
                 renderRightButton={() => {
                         const style={
                             color:'grey',
@@ -94,7 +88,6 @@ export default class GoogleAutocomplete extends React.Component {
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                     console.log(data, details);
                     this.props.setAddressOfHome(data);
-                    styles.container=styles.container={flex:0,height:0};
 
                 }}
 
@@ -127,7 +120,7 @@ export default class GoogleAutocomplete extends React.Component {
 }
 const styles = StyleSheet.create({
     container:{
-        flex:0,height:0
+        flex:1
     },
     textInput: {
         height: 40,
