@@ -15,7 +15,7 @@ export default class GoogleAutocomplete extends React.Component {
                 ref={(instance) => { this.GooglePlacesRef = instance }}
                 placeholder='Search here'
                 minLength={1} // minimum length of text to search
-                autoFocus={false}
+                autoFocus={true}
                 returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                 listViewDisplayed={'false'}    // true/false/undefined
                 fetchDetails={false}
@@ -51,10 +51,10 @@ export default class GoogleAutocomplete extends React.Component {
                             size={20}
                             name="arrow-right"
                             onPress={() =>{
-                                styles.container={flex:0,height:0};
                                 this.GooglePlacesRef.triggerBlur();
                                 this.GooglePlacesRef._onBlur();
                                 this.GooglePlacesRef.setAddressText('');
+                                this.props.returnToMap();
                             }
                             }
                         >

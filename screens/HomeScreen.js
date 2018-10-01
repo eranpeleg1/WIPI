@@ -4,6 +4,7 @@ import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 let {height,width} = Dimensions.get('window');
 
 export default class HomeScreen extends Component {
@@ -157,6 +158,7 @@ export default class HomeScreen extends Component {
 
                             >
                                 <TextInput style={styles.textInput}
+                                           placeholder='Search here'
                                            onFocus={()=>this.setState({mode:'AutoComplete'})}
                                 />
                             </View>
@@ -192,7 +194,7 @@ export default class HomeScreen extends Component {
                 break
             case 'AutoComplete':
                 res = ( <View style={styles.container}>
-                        <GoogleAutoComplete setAddressOfHome={this.setAddress}/>
+                        <GoogleAutoComplete setAddressOfHome={this.setAddress} returnToMap={()=>this.setState({mode:'default'})}/>
                     </View>
                 )
         }
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingBottom:15,
         margin:0,
-        top:2,
+        bottom: 1,
         textAlign:'right'
     },
     textInputContainer: {
