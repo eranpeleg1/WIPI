@@ -24,7 +24,7 @@ export default class HomeScreen extends Component {
     };
 
     async componentDidMount() {
-        if (address===null) {
+        if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
             this.setState({location, address, mapRegion, hasLocationPermissions});
         }
@@ -104,6 +104,21 @@ export default class HomeScreen extends Component {
         setTimeout(()=>this.setState({location,address,hasLocationPermissions}),501);
     }
 
+    setAddress = async (address) => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        let hasLocationPermissions =  (status === 'granted');
+        let location = await Location.geocodeAsync(address.description);
+        console.log("address",location);
+        const mapRegion = {
+                latitude: location[0].latitude,
+                longitude: location[0].longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
+            }
+
+        this.setState({mapRegion,address,mode:'default',location:location[0], hasLocationPermissions})
+    }
+
 
     render() {
         let res
@@ -177,7 +192,7 @@ export default class HomeScreen extends Component {
                 break
             case 'AutoComplete':
                 res = ( <View style={styles.container}>
-                        <GoogleAutoComplete setAddressOfHome={(address)=>{this.setState({address})}}/>
+                        <GoogleAutoComplete setAddressOfHome={this.setAddress}/>
                     </View>
                 )
         }
