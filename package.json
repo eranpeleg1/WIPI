@@ -19,7 +19,6 @@
     "firebase": "^5.4.1",
     "lodash": "^4.17.10",
     "react": "16.3.1",
-<<<<<<< HEAD
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-google-places-autocomplete": "^1.3.9",
     "react-native-vector-icons": "^5.0.0",
@@ -31,14 +30,12 @@
   },
   "devDependencies": {
     "jest-expo": "29.0.0",
-    "react-devtools": "^3.4.0"
-=======
+    "react-devtools": "^3.4.0",
     "react-native": "~0.55.2",
     "react-native-elevated-view": "0.0.6",
     "react-native-google-places-autocomplete": "^1.3.6",
     "react-native-material-bottom-navigation": "^0.9.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.0.1"
->>>>>>> 6d1aa65d594fc783a681784a774d2d3d87e867bd
   }
 }
