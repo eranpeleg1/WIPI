@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
@@ -137,7 +137,7 @@ export default class HomeScreen extends Component {
                                                 ref={map => this.map = map}
                                                 provider="google"
                                                 customMapStyle={mapStyle}
-                                                style={{alignSelf: 'stretch', height: height}}
+                                                style={{alignSelf: 'stretch', height: height,zIndex:0}}
                                                 region={this.state.mapRegion}
                                                 showsUserLocation={true}
                                                 showsMyLocationButton={false}
@@ -249,6 +249,14 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
     },
     textInput: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 5,
+        paddingTop: 4.5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        marginTop: 7.5,
+        marginLeft: 8,
+        marginRight: 8,
         height: 40,
         color: '#5d5d5d',
         fontSize: 16,
@@ -259,12 +267,15 @@ const styles = StyleSheet.create({
     },
     textInputContainer: {
         position: 'absolute',
-        top:30,
+        borderTopColor: '#7e7e7e',
+        borderBottomColor: '#b5b5b5',
+        borderTopWidth: 1 / PixelRatio.get(),
+        top: Constants.statusBarHeight,
+        width: width-20,
+        height: 38,
         zIndex:3,
         backgroundColor: '#ffffff',
-        height: 38,
-        width: width - 10,
-        margin:15,
+        margin:10,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: '#ddd',
