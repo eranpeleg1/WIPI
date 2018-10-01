@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
-import { Constants, MapView, Location, Permissions } from 'expo';
+import {Constants, MapView, Location, Permissions} from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
-let {height,width} = Dimensions.get('window');
+
+let {height, width} = Dimensions.get('window');
 
 
 export default class HomeScreen extends Component {
@@ -20,9 +21,10 @@ export default class HomeScreen extends Component {
         mapRegion: null,
         hasLocationPermissions: false,
         location: null,
-        parkingMode:false,
+        parkingMode: false,
         address: null,
-        loggedInUserId:'0lP3yewZoYMXd46vx5uDwrt0VNA3'
+        loggedInUserId: '0lP3yewZoYMXd46vx5uDwrt0VNA3',
+        mode: 'default'
     };
 
     async componentDidMount() {
@@ -33,9 +35,9 @@ export default class HomeScreen extends Component {
         }
     }
 
-    park(){
-        console.log("this.props.navigation",this.props.navigation);
-        console.log('user id is (from park) ',this.props.navigation.getParam('userId'));
+    park() {
+        console.log("this.props.navigation", this.props.navigation);
+        console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
             headers: {
@@ -45,14 +47,15 @@ export default class HomeScreen extends Component {
             body: JSON.stringify({
                 "userId": this.state.userId,
                 "latitude": 45,
-                "longitude":555
+                "longitude": 555
             })
         }).then(response => {
             // console.log(response);
             this.setState({parkingMode: true})
         })
     }
-    endPark= ()=> {
+
+    endPark = () => {
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
             method: 'POST',
             headers: {
@@ -70,17 +73,17 @@ export default class HomeScreen extends Component {
 
 
     _getLocationAsync = async () => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        let hasLocationPermissions =  (status === 'granted');
-        let mapRegion,location,address;
+        let {status} = await Permissions.askAsync(Permissions.LOCATION);
+        let hasLocationPermissions = (status === 'granted');
+        let mapRegion, location, address;
         if (hasLocationPermissions) {
             location = await Location.getCurrentPositionAsync({});
             let tempAddress = await Location.reverseGeocodeAsync(location.coords);
-            tempAddress=tempAddress[0];
-            address={
-                structured_formatting:{
-                    main_text:tempAddress.street+" "+tempAddress.name,
-                    secondary_text:tempAddress.city+", "+tempAddress.country
+            tempAddress = tempAddress[0];
+            address = {
+                structured_formatting: {
+                    main_text: tempAddress.street + " " + tempAddress.name,
+                    secondary_text: tempAddress.city + ", " + tempAddress.country
                 }
             }
             mapRegion = {
@@ -90,11 +93,11 @@ export default class HomeScreen extends Component {
                 longitudeDelta: 0.001
             }
         }
-        return {location,address,mapRegion,hasLocationPermissions};
+        return {location, address, mapRegion, hasLocationPermissions};
     };
 
     myPlace = async () => {
-        let {location,address,hasLocationPermissions} = await this._getLocationAsync();
+        let {location, address, hasLocationPermissions} = await this._getLocationAsync();
         this.map.animateToRegion(
             {
                 latitude: location.coords.latitude,
@@ -104,48 +107,49 @@ export default class HomeScreen extends Component {
             }
         );
 
-        setTimeout(()=>this.setState({location,address,hasLocationPermissions}),501);
+        setTimeout(() => this.setState({location, address, hasLocationPermissions}), 501);
     }
 
     setAddress = async (address) => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        let hasLocationPermissions =  (status === 'granted');
+        let {status} = await Permissions.askAsync(Permissions.LOCATION);
+        let hasLocationPermissions = (status === 'granted');
         let location = await Location.geocodeAsync(address.description);
-        console.log("address",location);
+        console.log("address", location);
         const mapRegion = {
-                latitude: location[0].latitude,
-                longitude: location[0].longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-            }
+            latitude: location[0].latitude,
+            longitude: location[0].longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+        }
 
-        this.setState({mapRegion,address,mode:'default',location:location[0], hasLocationPermissions})
+        this.setState({mapRegion, address, mode: 'default', location: location[0], hasLocationPermissions})
     }
 
 
     render() {
-        let res
+        let res;
+        console.log(this.state.mode);
         switch (this.state.mode) {
             case 'default':
                 res =
-                    ( <View style={styles.container}>
+                    (<View style={styles.container}>
                             {
-                                this.state.location === null ?
+                                this.state.location === null
+                                    ?
                                     <Text>Finding your current location...</Text> :
                                     this.state.hasLocationPermissions === false ?
-                                        <Text>Location permissions are not granted.</Text> :
-                                        this.state.mapRegion === null ?
-                                            <Text>Map region doesn't exist.</Text> :
-                                            <MapView
-                                                ref={map => this.map = map}
-                                                provider="google"
-                                                customMapStyle={mapStyle}
-                                                style={{alignSelf: 'stretch', height: height,zIndex:0}}
-                                                region={this.state.mapRegion}
-                                                showsUserLocation={true}
-                                                showsMyLocationButton={false}
-                                                followsUserLocation={true}
-                                            />
+                                        <Text>Map region doesn't exist.</Text>
+                                        :
+                                        <MapView
+                                            ref={map => this.map = map}
+                                            provider="google"
+                                            customMapStyle={mapStyle}
+                                            style={{alignSelf: 'stretch', height: height, zIndex: 0}}
+                                            region={this.state.mapRegion}
+                                            showsUserLocation={true}
+                                            showsMyLocationButton={false}
+                                            followsUserLocation={true}
+                                        />
 
                             }
                             <SubView showValue={300}
@@ -161,7 +165,7 @@ export default class HomeScreen extends Component {
                             >
                                 <TextInput style={styles.textInput}
                                            placeholder='Search here'
-                                           onFocus={()=>this.setState({mode:'AutoComplete'})}
+                                           onFocus={() => this.setState({mode: 'AutoComplete'})}
                                 />
                             </View>
                             <View style={styles.buttons}>
@@ -195,8 +199,9 @@ export default class HomeScreen extends Component {
                     )
                 break
             case 'AutoComplete':
-                res = ( <View style={styles.container}>
-                        <GoogleAutoComplete setAddressOfHome={this.setAddress} returnToMap={()=>this.setState({mode:'default'})}/>
+                res = (<View style={styles.container}>
+                        <GoogleAutoComplete setAddressOfHome={this.setAddress}
+                                            returnToMap={() => this.setState({mode: 'default'})}/>
                     </View>
                 )
         }
@@ -212,20 +217,20 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#ecf0f1',
     },
-    buttons:{
+    buttons: {
         position: 'absolute',
         bottom: '17%',
-        right:13
+        right: 13
     },
-    mapButtonContainer:{
-        height:58,
-        width:58,
-        elevation:4,
+    mapButtonContainer: {
+        height: 58,
+        width: 58,
+        elevation: 4,
         backgroundColor: 'transparent',
-        justifyContent:'center',
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingTop:1,
-        margin:7
+        paddingTop: 1,
+        margin: 7
     },
     mapButton: {
         borderWidth: 0,
@@ -241,16 +246,16 @@ const styles = StyleSheet.create({
             height: 1,
             width: 1
         },
-        bottom:1,
-        elevation:2,
-        zIndex:3
+        bottom: 1,
+        elevation: 2,
+        zIndex: 3
     },
-    parkButton:{
-        backgroundColor:'#3B9BFF'
+    parkButton: {
+        backgroundColor: '#3B9BFF'
     },
 
-    locationButton:{
-        backgroundColor:'white',
+    locationButton: {
+        backgroundColor: 'white',
     },
     textInput: {
         backgroundColor: '#FFFFFF',
@@ -264,10 +269,10 @@ const styles = StyleSheet.create({
         height: 40,
         color: '#5d5d5d',
         fontSize: 16,
-        paddingBottom:15,
-        margin:0,
+        paddingBottom: 15,
+        margin: 0,
         bottom: 1,
-        textAlign:'right'
+        textAlign: 'right'
     },
     textInputContainer: {
         position: 'absolute',
@@ -275,17 +280,17 @@ const styles = StyleSheet.create({
         borderBottomColor: '#b5b5b5',
         borderTopWidth: 1 / PixelRatio.get(),
         top: Constants.statusBarHeight,
-        width: width-20,
+        width: width - 20,
         height: 38,
-        zIndex:3,
+        zIndex: 3,
         backgroundColor: '#ffffff',
-        margin:10,
+        margin: 10,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: '#ddd',
         borderBottomWidth: 0,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.8,
         elevation: 2,
     },
