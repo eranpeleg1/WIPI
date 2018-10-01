@@ -135,10 +135,12 @@ export default class HomeScreen extends Component {
                                      backgroundColor={'#3B9BFF'}
                                      address={this.state.address}
                             />
-                            <View style={styles.inputContainr}
+                            <View style={styles.textInputContainer}
 
                             >
-                                <TextInput/>
+                                <TextInput style={styles.textInput}
+                                           onFocus={()=>this.setState({mode:'AutoComplete'})}
+                                />
                             </View>
                             <View style={styles.buttons}>
                                 <View style={styles.mapButtonContainer}>
@@ -172,6 +174,9 @@ export default class HomeScreen extends Component {
                 break
             case 'AutoComplete':
                 res = ( <View style={styles.container}>
+                        <Text style={{fontWeight: 'bold', color: 'white', fontSize: 30}}>
+                            AutoComplete
+                        </Text>
                     </View>
                 )
 
@@ -228,6 +233,32 @@ const styles = StyleSheet.create({
 
     locationButton:{
         backgroundColor:'white',
+    },
+    textInput: {
+        height: 40,
+        color: '#5d5d5d',
+        fontSize: 16,
+        paddingBottom:15,
+        margin:0,
+        top:2,
+        textAlign:'right'
+    },
+    textInputContainer: {
+        position: 'absolute',
+        top:30,
+        zIndex:3,
+        backgroundColor: '#ffffff',
+        height: 38,
+        width: width - 10,
+        margin:15,
+        borderWidth: 1,
+        borderRadius: 2,
+        borderColor: '#ddd',
+        borderBottomWidth: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        elevation: 2,
     },
 });
 
