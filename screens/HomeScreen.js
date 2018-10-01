@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet,Dimensions,TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput} from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 let {height,width} = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class HomeScreen extends Component {
+    static navigationOptions = {
+        header: null,
+        headerVisible: false,
+        headerMode: 'none',
+    };
+
     state = {
         mapRegion: null,
         hasLocationPermissions: false,
         location: null,
         parkingMode:false,
         address: null,
-        loggedInUserId:this.props.navigation.getParam('userId', null)
+        loggedInUserId:this.props.navigation.getParam('userId', null),
+        mode:'default'
     };
 
     async componentDidMount() {
@@ -96,64 +103,81 @@ export default class HomeScreen extends Component {
 
 
     render() {
-        return (
-            <View style={styles.container}>
-                {
-                    this.state.location === null ?
-                        <Text>Finding your current location...</Text> :
-                        this.state.hasLocationPermissions === false ?
-                            <Text>Location permissions are not granted.</Text> :
-                            this.state.mapRegion === null ?
-                                <Text>Map region doesn't exist.</Text> :
-                                    <MapView
-                                        ref={map => this.map = map}
-                                        provider="google"
-                                        customMapStyle={mapStyle}
-                                        style={{ alignSelf: 'stretch', height: height}}
-                                        region={this.state.mapRegion}
-                                        showsUserLocation= {true}
-                                        showsMyLocationButton = {false}
-                                        followsUserLocation= {true}
-                                    />
+        let res
+        switch (this.state.mode) {
+            case 'default':
+                res =
+                    ( <View style={styles.container}>
+                            {
+                                this.state.location === null ?
+                                    <Text>Finding your current location...</Text> :
+                                    this.state.hasLocationPermissions === false ?
+                                        <Text>Location permissions are not granted.</Text> :
+                                        this.state.mapRegion === null ?
+                                            <Text>Map region doesn't exist.</Text> :
+                                            <MapView
+                                                ref={map => this.map = map}
+                                                provider="google"
+                                                customMapStyle={mapStyle}
+                                                style={{alignSelf: 'stretch', height: height}}
+                                                region={this.state.mapRegion}
+                                                showsUserLocation={true}
+                                                showsMyLocationButton={false}
+                                                followsUserLocation={true}
+                                            />
 
-                }
-                <SubView showValue={300}
-                         hideValue={50}
-                         show={this.state.parkingMode}
-                         endPark={this.endPark}
-                         height={300}
-                         backgroundColor={'#3B9BFF'}
-                         address={this.state.address}
-                />
-                <View style={styles.buttons}>
-                    <View style={styles.mapButtonContainer}>
-                        <TouchableOpacity
-                            style={[styles.mapButton,styles.locationButton]}
-                            onPress={this.myPlace}
-                            activeOpacity={0.8}
-                        >
-                            <Icon
-                                name="my-location"
-                                backgroundColor='white'
-                                size={24}
-                                color='black'
+                            }
+                            <SubView showValue={300}
+                                     hideValue={50}
+                                     show={this.state.parkingMode}
+                                     endPark={this.endPark}
+                                     height={300}
+                                     backgroundColor={'#3B9BFF'}
+                                     address={this.state.address}
                             />
-                        </TouchableOpacity>
+                            <View style={styles.inputContainr}
+
+                            >
+                                <TextInput/>
+                            </View>
+                            <View style={styles.buttons}>
+                                <View style={styles.mapButtonContainer}>
+                                    <TouchableOpacity
+                                        style={[styles.mapButton, styles.locationButton]}
+                                        onPress={this.myPlace}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Icon
+                                            name="my-location"
+                                            backgroundColor='white'
+                                            size={24}
+                                            color='black'
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.mapButtonContainer}>
+                                    <TouchableOpacity
+                                        style={[styles.mapButton, styles.parkButton]}
+                                        onPress={() => this.park()}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Text style={{fontWeight: 'bold', color: 'white', fontSize: 30}}>
+                                            P
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    )
+                break
+            case 'AutoComplete':
+                res = ( <View style={styles.container}>
                     </View>
-                    <View style={styles.mapButtonContainer}>
-                        <TouchableOpacity
-                            style={[styles.mapButton,styles.parkButton]}
-                            onPress={ () => this.park() }
-                            activeOpacity={0.8}
-                        >
-                            <Text style={{fontWeight: 'bold', color: 'white', fontSize:30}}>
-                                P
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        );
+                )
+
+
+        }
+        return res
     }
 }
 

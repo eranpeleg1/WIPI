@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
         shadowColor:'#000',
         shadowRadius:29,
         backgroundColor: 'transparent',
-        shadowOpacity:1.0,
         borderRadius:29,
         justifyContent:'center',
         alignItems: 'center',

@@ -28,7 +28,7 @@ export default class GoogleAutocomplete extends React.Component {
                     }
                 }
                 renderRightButton={() => {
-                        style={
+                        const style={
                             color:'grey',
                             marginRight:10
                         }
@@ -44,7 +44,7 @@ export default class GoogleAutocomplete extends React.Component {
                 }
 
                 renderLeftButton={() => {
-                    style = {
+                    const style = {
                         color: 'grey',
 
                         marginLeft: 10
