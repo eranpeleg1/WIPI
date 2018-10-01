@@ -5,6 +5,14 @@ import AppNavigator from './navigation/AppNavigator';
 import * as firebase from "firebase";
 import LoginScreen from "./screens/LoginScreen";
 
+<<<<<<< HEAD
+=======
+import Splash from './Splash.js'
+import HomeNavigation from './HomeNavigation.js'
+import Login from './Login.js'
+import * as firebase from "firebase/index";
+import * as firestore from 'firebase/firestore';
+>>>>>>> 6d1aa65d594fc783a681784a774d2d3d87e867bd
 
 import{store} from './redux/wipi-redux';
 import {Provider} from 'react-redux';
@@ -17,6 +25,23 @@ export default class App extends React.Component {
 
     }
 
+<<<<<<< HEAD
+=======
+    handler(){
+        console.log("handler: "+this);
+        firebase.auth().onAuthStateChanged((user)=>{
+            let nextPage='login';
+            if (user !==null) {
+                if (this.state.nextPage==='login'){
+                    this.storeUserDetails(user.uid, user.displayName)
+                }
+                nextPage='HomeNavigation';
+            }
+            this.setState({nextPage});
+        })
+    }
+
+>>>>>>> 6d1aa65d594fc783a681784a774d2d3d87e867bd
     componentWillMount(){
         //const settings = {timestampsInSnapshots: true};
         //firebase.firestore().settings(settings);
@@ -31,6 +56,7 @@ export default class App extends React.Component {
     }
 
     render() {
+<<<<<<< HEAD
         let screen;
         if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
             return(
@@ -50,6 +76,19 @@ export default class App extends React.Component {
                 </Provider>
 
             )
+=======
+        let page;
+        switch (this.state.nextPage) {
+            case 'splash':
+                page=<Splash handler = {this.handler}/>;
+                break;
+            case 'login':
+                page=<Login handler = {this.handler}/>;
+                break;
+            case 'HomeNavigation':
+                page=<HomeNavigation/>;
+                break;
+>>>>>>> 6d1aa65d594fc783a681784a774d2d3d87e867bd
         }
     }
 
