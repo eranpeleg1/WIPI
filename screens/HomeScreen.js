@@ -36,7 +36,7 @@ export default class HomeScreen extends Component {
     }
 
     park() {
-        console.log("this.props.navigation", this.props.navigation);
+
         console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
