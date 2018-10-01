@@ -4,7 +4,7 @@ import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
 let {height,width} = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
 export default class HomeScreen extends Component {
     state = {
         mapRegion: null,
@@ -12,11 +12,12 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode:false,
         address: null,
-        loggedInUserId:this.props.navigation.getParam('userId', null)
+        loggedInUserId:'0lP3yewZoYMXd46vx5uDwrt0VNA3'
     };
 
     async componentDidMount() {
         let {location,mapRegion,address,hasLocationPermissions} = await this._getLocationAsync();
+        await registerForPushNotificationsAsync(this.state.loggedInUserId);
         this.setState({location,address,mapRegion,hasLocationPermissions});
     }
 
