@@ -45,9 +45,9 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.userId,
-                "latitude": 45,
-                "longitude": 555
+                "userId": this.state.loggedInUserId,
+                "latitude": this.state.location.coords.latitude,
+                "longitude": this.state.location.coords.longitude
             })
         }).then(response => {
             // console.log(response);
@@ -63,7 +63,7 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.userId
+                "userId": this.state.loggedInUserId
             })
         }).then(response => {
             // console.log(response);
