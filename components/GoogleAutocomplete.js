@@ -1,7 +1,9 @@
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Constants} from "expo";
+let {height,width} = Dimensions.get('window');
 
 
 export default class GoogleAutocomplete extends React.Component {
@@ -13,7 +15,7 @@ export default class GoogleAutocomplete extends React.Component {
                 ref={(instance) => { this.GooglePlacesRef = instance }}
                 placeholder='Search here'
                 minLength={1} // minimum length of text to search
-                autoFocus={false}
+                autoFocus={true}
                 returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                 listViewDisplayed={'false'}    // true/false/undefined
                 fetchDetails={false}
@@ -21,30 +23,24 @@ export default class GoogleAutocomplete extends React.Component {
                 currentLocation={false}
                 textInputHide={false}
                 styles={styles}
-                textInputProps={{
-                    onChangeText:(text)=>{
-                            styles.container={flex:0,height:1000};
-                        }
-                    }
-                }
                 renderRightButton={() => {
-                        style={
-                            color:'grey',
-                            marginRight:10
-                        }
-                        return (
-                            <Icon
-                                style={style}
-                                size={20}
-                                name="close"
-                                onPress={() => this.GooglePlacesRef.setAddressText("")}
-                            >
-                            </Icon>)
+                    const style={
+                        color:'grey',
+                        marginRight:10
                     }
+                    return (
+                        <Icon
+                            style={style}
+                            size={20}
+                            name="close"
+                            onPress={() => this.GooglePlacesRef.setAddressText("")}
+                        >
+                        </Icon>)
+                }
                 }
 
                 renderLeftButton={() => {
-                    style = {
+                    const style = {
                         color: 'grey',
 
                         marginLeft: 10
@@ -55,15 +51,15 @@ export default class GoogleAutocomplete extends React.Component {
                             size={20}
                             name="arrow-right"
                             onPress={() =>{
-                                    styles.container={flex:0,height:0};
-                                    this.GooglePlacesRef.triggerBlur();
-                                    this.GooglePlacesRef._onBlur();
-                                    this.GooglePlacesRef.setAddressText('');
-                                }
+                                this.GooglePlacesRef.triggerBlur();
+                                this.GooglePlacesRef._onBlur();
+                                this.GooglePlacesRef.setAddressText('');
+                                this.props.returnToMap();
+                            }
                             }
                         >
                         </Icon>)
-                    }
+                }
                 }
 
                 renderRow={row => {
@@ -94,7 +90,6 @@ export default class GoogleAutocomplete extends React.Component {
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                     console.log(data, details);
                     this.props.setAddressOfHome(data);
-                    styles.container=styles.container={flex:0,height:0};
 
                 }}
 
@@ -127,7 +122,10 @@ export default class GoogleAutocomplete extends React.Component {
 }
 const styles = StyleSheet.create({
     container:{
-        flex:0,height:0
+        flex:1,
+        paddingTop: Constants.statusBarHeight,
+        height,
+        width
     },
     textInput: {
         height: 40,
@@ -139,14 +137,18 @@ const styles = StyleSheet.create({
         textAlign:'right'
     },
     listView:{
-      zIndex:11,
-      elevation:11,
+        position:'absolute',
+        top:Constants.statusBarHeight+38,
+        zIndex:11,
+        elevation:11,
         backgroundColor:"white"
     },
     textInputContainer: {
+        position: 'absolute',
         backgroundColor: '#ffffff',
         height: 38,
-        margin:15,
+        width:width-20,
+        margin:10,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: '#ddd',

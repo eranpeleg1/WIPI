@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet,Dimensions,TouchableOpacity } from 'react-native';
+import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
 import { Constants, MapView, Location, Permissions } from 'expo';
 import SubView from "../components/SubView"
-let {height,width} = Dimensions.get('window');
+import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
+import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
+let {height,width} = Dimensions.get('window');
+
+
 export default class HomeScreen extends Component {
+    static navigationOptions = {
+        header: null,
+        headerVisible: false,
+        headerMode: 'none',
+    };
+
     state = {
         mapRegion: null,
         hasLocationPermissions: false,
@@ -16,9 +26,11 @@ export default class HomeScreen extends Component {
     };
 
     async componentDidMount() {
-        let {location,mapRegion,address,hasLocationPermissions} = await this._getLocationAsync();
         await registerForPushNotificationsAsync(this.state.loggedInUserId);
-        this.setState({location,address,mapRegion,hasLocationPermissions});
+        if (this.state.address === null) {
+            let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
+            this.setState({location, address, mapRegion, hasLocationPermissions});
+        }
     }
 
     park(){
@@ -95,66 +107,100 @@ export default class HomeScreen extends Component {
         setTimeout(()=>this.setState({location,address,hasLocationPermissions}),501);
     }
 
+    setAddress = async (address) => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        let hasLocationPermissions =  (status === 'granted');
+        let location = await Location.geocodeAsync(address.description);
+        console.log("address",location);
+        const mapRegion = {
+                latitude: location[0].latitude,
+                longitude: location[0].longitude,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
+            }
+
+        this.setState({mapRegion,address,mode:'default',location:location[0], hasLocationPermissions})
+    }
+
 
     render() {
-        return (
-            <View style={styles.container}>
-                {
-                    this.state.location === null ?
-                        <Text>Finding your current location...</Text> :
-                        this.state.hasLocationPermissions === false ?
-                            <Text>Location permissions are not granted.</Text> :
-                            this.state.mapRegion === null ?
-                                <Text>Map region doesn't exist.</Text> :
-                                    <MapView
-                                        ref={map => this.map = map}
-                                        provider="google"
-                                        customMapStyle={mapStyle}
-                                        style={{ alignSelf: 'stretch', height: height}}
-                                        region={this.state.mapRegion}
-                                        showsUserLocation= {true}
-                                        showsMyLocationButton = {false}
-                                        followsUserLocation= {true}
-                                    />
+        let res
+        switch (this.state.mode) {
+            case 'default':
+                res =
+                    ( <View style={styles.container}>
+                            {
+                                this.state.location === null ?
+                                    <Text>Finding your current location...</Text> :
+                                    this.state.hasLocationPermissions === false ?
+                                        <Text>Location permissions are not granted.</Text> :
+                                        this.state.mapRegion === null ?
+                                            <Text>Map region doesn't exist.</Text> :
+                                            <MapView
+                                                ref={map => this.map = map}
+                                                provider="google"
+                                                customMapStyle={mapStyle}
+                                                style={{alignSelf: 'stretch', height: height,zIndex:0}}
+                                                region={this.state.mapRegion}
+                                                showsUserLocation={true}
+                                                showsMyLocationButton={false}
+                                                followsUserLocation={true}
+                                            />
 
-                }
-                <SubView showValue={300}
-                         hideValue={50}
-                         show={this.state.parkingMode}
-                         endPark={this.endPark}
-                         height={300}
-                         backgroundColor={'#3B9BFF'}
-                         address={this.state.address}
-                />
-                <View style={styles.buttons}>
-                    <View style={styles.mapButtonContainer}>
-                        <TouchableOpacity
-                            style={[styles.mapButton,styles.locationButton]}
-                            onPress={this.myPlace}
-                            activeOpacity={0.8}
-                        >
-                            <Icon
-                                name="my-location"
-                                backgroundColor='white'
-                                size={24}
-                                color='black'
+                            }
+                            <SubView showValue={300}
+                                     hideValue={50}
+                                     show={this.state.parkingMode}
+                                     endPark={this.endPark}
+                                     height={300}
+                                     backgroundColor={'#3B9BFF'}
+                                     address={this.state.address}
                             />
-                        </TouchableOpacity>
+                            <View style={styles.textInputContainer}
+
+                            >
+                                <TextInput style={styles.textInput}
+                                           placeholder='Search here'
+                                           onFocus={()=>this.setState({mode:'AutoComplete'})}
+                                />
+                            </View>
+                            <View style={styles.buttons}>
+                                <View style={styles.mapButtonContainer}>
+                                    <TouchableOpacity
+                                        style={[styles.mapButton, styles.locationButton]}
+                                        onPress={this.myPlace}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Icon
+                                            name="my-location"
+                                            backgroundColor='white'
+                                            size={24}
+                                            color='black'
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.mapButtonContainer}>
+                                    <TouchableOpacity
+                                        style={[styles.mapButton, styles.parkButton]}
+                                        onPress={() => this.park()}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Text style={{fontWeight: 'bold', color: 'white', fontSize: 30}}>
+                                            P
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    )
+                break
+            case 'AutoComplete':
+                res = ( <View style={styles.container}>
+                        <GoogleAutoComplete setAddressOfHome={this.setAddress} returnToMap={()=>this.setState({mode:'default'})}/>
                     </View>
-                    <View style={styles.mapButtonContainer}>
-                        <TouchableOpacity
-                            style={[styles.mapButton,styles.parkButton]}
-                            onPress={ () => this.park() }
-                            activeOpacity={0.8}
-                        >
-                            <Text style={{fontWeight: 'bold', color: 'white', fontSize:30}}>
-                                P
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        );
+                )
+        }
+        return res
     }
 }
 
@@ -205,6 +251,43 @@ const styles = StyleSheet.create({
 
     locationButton:{
         backgroundColor:'white',
+    },
+    textInput: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 5,
+        paddingTop: 4.5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        marginTop: 7.5,
+        marginLeft: 8,
+        marginRight: 8,
+        height: 40,
+        color: '#5d5d5d',
+        fontSize: 16,
+        paddingBottom:15,
+        margin:0,
+        bottom: 1,
+        textAlign:'right'
+    },
+    textInputContainer: {
+        position: 'absolute',
+        borderTopColor: '#7e7e7e',
+        borderBottomColor: '#b5b5b5',
+        borderTopWidth: 1 / PixelRatio.get(),
+        top: Constants.statusBarHeight,
+        width: width-20,
+        height: 38,
+        zIndex:3,
+        backgroundColor: '#ffffff',
+        margin:10,
+        borderWidth: 1,
+        borderRadius: 2,
+        borderColor: '#ddd',
+        borderBottomWidth: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        elevation: 2,
     },
 });
 

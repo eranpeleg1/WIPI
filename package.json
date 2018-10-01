@@ -29,6 +29,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "jest-expo": "29.0.0"
+    "jest-expo": "29.0.0",
+    "react-devtools": "^3.4.0"
   }
 }
