@@ -23,7 +23,7 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode: false,
         address: null,
-        loggedInUserId: '0lP3yewZoYMXd46vx5uDwrt0VNA3',
+        loggedInUserId: 'jf7U7EqcJrOfNJNDBJ52z5OVmCf1',
         mode: 'default'
     };
 
