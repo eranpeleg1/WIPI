@@ -20,7 +20,6 @@ export default class LoginScreen extends React.Component {
             firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(error=> {
                 console.log(error);
             })
-
         }
         //this.props.navigation.navigate('Main');
     }

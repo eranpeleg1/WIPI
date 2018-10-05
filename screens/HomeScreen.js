@@ -23,12 +23,11 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode: false,
         address: null,
-        loggedInUserId: '0lP3yewZoYMXd46vx5uDwrt0VNA3',
+        loggedInUserId: 'gcoc4LrDzVbaAQrWhVrYL2rJn572',
         mode: 'default'
     };
-
     async componentDidMount() {
-        await registerForPushNotificationsAsync(this.state.loggedInUserId);
+        await registerForPushNotificationsAsync(this.state.loggedInUserId)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
             this.setState({location, address, mapRegion, hasLocationPermissions});
@@ -36,7 +35,6 @@ export default class HomeScreen extends Component {
     }
 
     park() {
-
         console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
@@ -45,15 +43,16 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.userId,
-                "latitude": 45,
-                "longitude": 555
+                "userId": this.state.loggedInUserId,
+                "latitude": this.state.location.coords.latitude,
+                "longitude": this.state.location.coords.longitude
             })
         }).then(response => {
             // console.log(response);
             this.setState({parkingMode: true})
         })
     }
+
 
     endPark = () => {
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
@@ -63,7 +62,7 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.userId
+                "userId": this.state.loggedInUserId
             })
         }).then(response => {
             // console.log(response);
@@ -98,16 +97,15 @@ export default class HomeScreen extends Component {
 
     myPlace = async () => {
         let {location, address, hasLocationPermissions} = await this._getLocationAsync();
-        this.map.animateToRegion(
-            {
-                latitude: location.coords.latitude,
+        const mapRegion={
+            latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-            }
-        );
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+        }
+        this.map.animateToRegion(mapRegion);
 
-        setTimeout(() => this.setState({location, address, hasLocationPermissions}), 501);
+        setTimeout(() => this.setState({location, address, hasLocationPermissions,mapRegion}), 501);
     }
 
     setAddress = async (address) => {

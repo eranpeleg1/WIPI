@@ -16,7 +16,6 @@ export default class AuthLoadingScreen extends React.Component {
                 this.props.navigation.navigate('Main',{userId:user.uid})
                 :
                 this.props.navigation.navigate('Login')
-
         })
     }
 
@@ -28,7 +27,6 @@ export default class AuthLoadingScreen extends React.Component {
                 onError={this._handleLoadingError}
                 onFinish={this._handleFinishLoading}
             />
-
         );
     }
 
@@ -40,7 +38,6 @@ export default class AuthLoadingScreen extends React.Component {
     _handleFinishLoading = msg => {
         console.log(msg);
     };
-
 }
 
 const styles = StyleSheet.create({
