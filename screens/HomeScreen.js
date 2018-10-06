@@ -131,7 +131,7 @@ export default class HomeScreen extends Component {
         this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}, hasLocationPermissions})
     }
 
-    switchToReport = () => this.props.navigation.navigate('Reports')
+    switchToReport = () => this.props.navigation.navigate('Reports',{locationt: this.map.region})
 
     render() {
         let res;

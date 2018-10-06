@@ -4,7 +4,7 @@ import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRa
 import Icon from "react-native-vector-icons/MaterialIcons";
 import IconCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAwesome from "react-native-vector-icons/FontAwesome"
-import {Permissions } from 'expo';
+import {Location, Permissions} from 'expo';
 
 
 import {Constants} from "expo";
@@ -22,6 +22,7 @@ export default class ReportsScreen extends Component {
         photo:null,
         text:'',
         hasCameraPermission: false,
+        location:null,
     }
 
     updateReport = (photo) =>{
@@ -46,7 +47,8 @@ export default class ReportsScreen extends Component {
 
 
     report = () => {
-        console.log("report on malshanim");
+        console.log("report on malshanim")
+        this.switchToHome()
     }
 
     async componentWillMount() {
@@ -57,6 +59,21 @@ export default class ReportsScreen extends Component {
     }
 
     onChangeText =(text)=>(this.setState({text}))
+
+    _getLocationAsync = async () => {
+        let {status} = await Permissions.askAsync(Permissions.LOCATION);
+        let hasLocationPermissions = (status === 'granted');
+        let location
+        if (hasLocationPermissions) {
+            location = await Location.getCurrentPositionAsync({});
+        }
+        return {location};
+    }
+
+    async componentWillMount(){
+        location = await this._getLocationAsync()
+        this.setState({location})
+    }
 
     render() {
         /* Go ahead and delete ExpoConfigView and replace it with your
@@ -200,6 +217,7 @@ export default class ReportsScreen extends Component {
                 onPress={this.report}
                 activeOpacity={0.8}
                 style={styles.reportButton}
+                disabled={this.state.location===null}
             >
                 <Text style={{fontWeight: 'bold', color: 'white', fontSize: 20}}>
                     Report
