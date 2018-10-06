@@ -80,7 +80,6 @@ export default class LoginScreen extends React.Component {
     }
 }
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         alignItems:'center',
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     space:{
-        height:'10%'
+        height:'5%'
     },
     buttons:{
         top:'60%',
