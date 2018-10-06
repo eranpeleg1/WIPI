@@ -4,6 +4,9 @@ import {Constants, MapView, Location, Permissions} from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 
@@ -23,12 +26,11 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode: false,
         address: null,
-        loggedInUserId: '0lP3yewZoYMXd46vx5uDwrt0VNA3',
+        loggedInUserId: 'gcoc4LrDzVbaAQrWhVrYL2rJn572',
         mode: 'default'
     };
-
     async componentDidMount() {
-        await registerForPushNotificationsAsync(this.state.loggedInUserId);
+        await registerForPushNotificationsAsync(this.state.loggedInUserId)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
             this.setState({location, address, mapRegion, hasLocationPermissions});
@@ -36,7 +38,6 @@ export default class HomeScreen extends Component {
     }
 
     park() {
-
         console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
@@ -55,6 +56,7 @@ export default class HomeScreen extends Component {
         })
     }
 
+
     endPark = () => {
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/unmarkUserParking", {
             method: 'POST',
@@ -72,17 +74,21 @@ export default class HomeScreen extends Component {
     }
 
 
+
     _getLocationAsync = async () => {
         let {status} = await Permissions.askAsync(Permissions.LOCATION);
         let hasLocationPermissions = (status === 'granted');
         let mapRegion, location, address;
         if (hasLocationPermissions) {
             location = await Location.getCurrentPositionAsync({});
-            let tempAddress = await Location.reverseGeocodeAsync(location.coords);
+            let tempAddress = await Location.reverseGeocodeAsync(location.coords)
+            console.log("address: "+ JSON.stringify(tempAddress))
             tempAddress = tempAddress[0];
+            const street = tempAddress.street === null ? "":tempAddress.street
+            const name = tempAddress.name === null ? "":tempAddress.name
             address = {
                 structured_formatting: {
-                    main_text: tempAddress.street + " " + tempAddress.name,
+                    main_text: street + " " + name,
                     secondary_text: tempAddress.city + ", " + tempAddress.country
                 }
             }
@@ -94,20 +100,20 @@ export default class HomeScreen extends Component {
             }
         }
         return {location, address, mapRegion, hasLocationPermissions};
-    };
+    }
+
 
     myPlace = async () => {
         let {location, address, hasLocationPermissions} = await this._getLocationAsync();
-        this.map.animateToRegion(
-            {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-            }
-        );
+        const mapRegion={
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+        }
+        this.map.animateToRegion(mapRegion);
 
-        setTimeout(() => this.setState({location, address, hasLocationPermissions}), 501);
+        setTimeout(() => this.setState({location, address, hasLocationPermissions,mapRegion}), 501);
     }
 
     setAddress = async (address) => {
@@ -122,9 +128,10 @@ export default class HomeScreen extends Component {
             longitudeDelta: 0.001,
         }
 
-        this.setState({mapRegion, address, mode: 'default', location: location[0], hasLocationPermissions})
+        this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}, hasLocationPermissions})
     }
 
+    switchToReport = () => this.props.navigation.navigate('Reports')
 
     render() {
         let res;
@@ -189,11 +196,28 @@ export default class HomeScreen extends Component {
                                         onPress={() => this.park()}
                                         activeOpacity={0.8}
                                     >
-                                        <Text style={{fontWeight: 'bold', color: 'white', fontSize: 30}}>
-                                            P
-                                        </Text>
+                                        <Icon
+                                            name="local-parking"
+                                            backgroundColor='white'
+                                            size={24}
+                                            color='white'
+                                        />
                                     </TouchableOpacity>
                                 </View>
+                                </View>
+                            <View style={styles.reportWrapper}>
+                                <TouchableOpacity
+                                    style={[styles.mapButton, styles.reportButton]}
+                                    onPress={this.switchToReport}
+                                    activeOpacity={0.8}
+                                >
+                                    <IconCommunity
+                                        name="flag"
+                                        backgroundColor='white'
+                                        size={24}
+                                        color='white'
+                                    />
+                                </TouchableOpacity>
                             </View>
                         </View>
                     )
@@ -222,6 +246,11 @@ const styles = StyleSheet.create({
         bottom: '17%',
         right: 13
     },
+    reportWrapper: {
+        position: 'absolute',
+        bottom: '17%',
+        left: 13
+    },
     mapButtonContainer: {
         height: 58,
         width: 58,
@@ -249,6 +278,9 @@ const styles = StyleSheet.create({
         bottom: 1,
         elevation: 2,
         zIndex: 3
+    },
+    reportButton: {
+        backgroundColor: '#FF6E69',
     },
     parkButton: {
         backgroundColor: '#3B9BFF'
