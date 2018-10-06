@@ -22,6 +22,7 @@ export default class ReportsScreen extends Component {
         photo:null,
         text:'',
         hasCameraPermission: false,
+        hasGalleryPermission: false,
         location:null,
     }
 
@@ -42,7 +43,13 @@ export default class ReportsScreen extends Component {
     }
 
     switchToGallery = async () =>  {
+        if (this.state.hasGalleryPermission)
             this.props.navigation.navigate('Gallery',{updateReport:this.updateReport})
+        const { status } = await Permissions.askAsync(Permissions.Permissions.CAMERA_ROLL);
+        if (status === 'granted') {
+            this.setState({hasGalleryPermission: status === 'granted'});
+            this.props.navigation.navigate('Gallery', {updateReport: this.updateReport})
+        }
     }
 
 
@@ -52,10 +59,15 @@ export default class ReportsScreen extends Component {
     }
 
     async componentWillMount() {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        if (status !== 'granted')
+        const status  = await Permissions.askAsync(Permissions.CAMERA);
+        if (status.status !== 'granted')
             this.switchToHome()
-        this.setState({ hasCameraPermission: status === 'granted' });
+        const status2 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status2.status !== 'granted')
+            this.switchToHome()
+        this.setState({ hasCameraPermission: status.status === 'granted', hasGalleryPermission: status2.status === 'granted' });
+        location = await this._getLocationAsync()
+        this.setState({location})
     }
 
     onChangeText =(text)=>(this.setState({text}))
@@ -70,10 +82,6 @@ export default class ReportsScreen extends Component {
         return {location};
     }
 
-    async componentWillMount(){
-        location = await this._getLocationAsync()
-        this.setState({location})
-    }
 
     render() {
         /* Go ahead and delete ExpoConfigView and replace it with your
@@ -83,8 +91,8 @@ export default class ReportsScreen extends Component {
             backgroundColor = {backgroundColor: '#cc6600'}
         else if (this.state.reportType === 'bicycleOfficer')
             backgroundColor = {backgroundColor: '#006633'}
-
         console.log("reports state"+JSON.stringify(this.state))
+
         return (
             <View style={[styles.container,backgroundColor]} >
             <View style={styles.headerWrapper}>
