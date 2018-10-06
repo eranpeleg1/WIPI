@@ -4,7 +4,7 @@ import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRa
 import Icon from "react-native-vector-icons/MaterialIcons";
 import IconCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAwesome from "react-native-vector-icons/FontAwesome"
-import { Camera, Permissions } from 'expo';
+import {Permissions } from 'expo';
 
 
 import {Constants} from "expo";
@@ -21,13 +21,31 @@ export default class ReportsScreen extends Component {
         reportType:"parkingOfficer",
         photo:null,
         text:'',
-        hasCameraPermission: null,
-        cameraType: Camera.Constants.Type.back,
+        hasCameraPermission: false,
     }
 
-    switchToHome= () => this.props.navigation.navigate('Home')
+    updateReport = (photo) =>{
+        this.setState({photo})
 
-    report = ()=>{
+    }
+
+    switchToHome = () => this.props.navigation.navigate('Home')
+    switchToCamera = async () =>  {
+        if (this.state.hasCameraPermission)
+            this.props.navigation.navigate('Camera',{updateReport:this.updateReport})
+        const { status } = await Permissions.askAsync(Permissions.CAMERA)
+        if (status === 'granted') {
+            this.setState({hasCameraPermission: status === 'granted'});
+            this.props.navigation.navigate('Camera',{updateReport:this.updateReport})
+        }
+    }
+
+    switchToGallery = async () =>  {
+            this.props.navigation.navigate('Gallery',{updateReport:this.updateReport})
+    }
+
+
+    report = () => {
         console.log("report on malshanim");
     }
 
@@ -43,9 +61,15 @@ export default class ReportsScreen extends Component {
     render() {
         /* Go ahead and delete ExpoConfigView and replace it with your
          * content, we just wanted to give you a quick view of your config */
+        let  backgroundColor = {backgroundColor: '#40596b'}
+        if (this.state.reportType ==='towingTruck')
+            backgroundColor = {backgroundColor: '#cc6600'}
+        else if (this.state.reportType === 'bicycleOfficer')
+            backgroundColor = {backgroundColor: '#006633'}
 
+        console.log("reports state"+JSON.stringify(this.state))
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,backgroundColor]} >
             <View style={styles.headerWrapper}>
             <Text style={styles.header}>Alert Reports</Text>
             </View>
@@ -54,14 +78,14 @@ export default class ReportsScreen extends Component {
                     <View style={styles.reportType}>
                         <TouchableOpacity
                             style={[styles.reportTypeButton, styles.officerButton]}
-                            onPress={this.switchToHome}
+                            onPress={()=>this.setState({reportType:'parkingOfficer'})}
                             activeOpacity={0.8}
                         >
                             <IconAwesome
                                 name="user"
                                 backgroundColor='#000099'
                                 size={24}
-                                color='#000099'
+                                color='#40596b'
                             />
                         </TouchableOpacity>
                         <Text style={{fontWeight: 'bold', color: 'white', fontSize: 12}}>
@@ -71,7 +95,7 @@ export default class ReportsScreen extends Component {
                     <View style={styles.reportType}>
                         <TouchableOpacity
                             style={[styles.reportTypeButton, styles.towingButton]}
-                            onPress={this.switchToHome}
+                            onPress={()=>this.setState({reportType:'towingTruck'})}
                             activeOpacity={0.8}
                         >
                             <IconCommunity
@@ -88,7 +112,7 @@ export default class ReportsScreen extends Component {
                     <View style={styles.reportType}>
                         <TouchableOpacity
                             style={[styles.reportTypeButton, styles.bicycleButton]}
-                            onPress={this.switchToHome}
+                            onPress={()=>this.setState({reportType:'bicycleOfficer'})}
                             activeOpacity={0.8}
                         >
                             <IconCommunity
@@ -127,7 +151,7 @@ export default class ReportsScreen extends Component {
                         <View style={styles.photoWrapper} >
                         <TouchableOpacity
                             style={[styles.photoButton]}
-                            onPress={this.switchToHome}
+                            onPress={this.switchToGallery}
                             activeOpacity={0.8}
                         >
                             <Icon
@@ -144,7 +168,7 @@ export default class ReportsScreen extends Component {
                         <View style={styles.photoWrapper} >
                         <TouchableOpacity
                             style={[styles.photoButton]}
-                            onPress={this.switchToHome}
+                            onPress={this.switchToCamera}
                             activeOpacity={0.8}
                         >
                             <Icon
@@ -190,7 +214,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems:'center',
-        backgroundColor: '#40596b',
     },
     headerWrapper:{
         top: 10 +  Constants.statusBarHeight,
