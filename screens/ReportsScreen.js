@@ -47,7 +47,8 @@ export default class ReportsScreen extends Component {
 
 
     report = () => {
-        console.log("report on malshanim");
+        console.log("report on malshanim")
+        this.switchToHome()
     }
 
     async componentWillMount() {
