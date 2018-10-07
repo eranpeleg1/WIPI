@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import IconCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAwesome from "react-native-vector-icons/FontAwesome"
 import {Location, Permissions} from 'expo';
+import * as firebase from "firebase";
 
 
 import {Constants} from "expo";
@@ -52,11 +53,38 @@ export default class ReportsScreen extends Component {
         }
     }
 
+    report = async () => {
+        if(this.state.photo !== null) {
+            const response = await fetch(this.state.photo.uri);
+            const blob = await response.blob();
+            let userId = "noam";
 
-    report = () => {
-        console.log("report on malshanim")
-        this.switchToHome()
+            const refStorage = firebase.storage().ref().child("images/" + userId);
+            await refStorage.put(blob);
+        }
+        await this.sendReport();
     }
+
+    sendReport = () =>{
+        console.log("server");
+        fetch("https://us-central1-wipi-cee66.cloudfunctions.net/addReportAction", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": "noam12",
+                "latitude": this.state.location.location.coords.latitude,
+                "longitude": this.state.location.location.coords.longitude,
+                "type": this.state.reportType,
+                "text": this.state.text
+            })
+        }).then(() => {
+            this.switchToHome();
+        })
+    }
+
 
     async componentWillMount() {
         const status  = await Permissions.askAsync(Permissions.CAMERA);
