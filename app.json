@@ -14,6 +14,12 @@
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
+      "ldpi":  "./assets/images/splash.png",
+      "mdpi":  "./assets/images/splash.png",
+      "hdpi":  "./assets/images/splash.png",
+      "xhdpi":  "./assets/images/splash.png",
+      "xxhdpi":  "./assets/images/splash.png",
+      "xxxhdpi":  "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#3B9BFF"
     },

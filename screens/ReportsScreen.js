@@ -4,7 +4,7 @@ import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRa
 import Icon from "react-native-vector-icons/MaterialIcons";
 import IconCommunity from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAwesome from "react-native-vector-icons/FontAwesome"
-import {Location, Permissions} from 'expo';
+import {Location, Permissions, ImagePicker} from 'expo';
 import * as firebase from "firebase";
 
 
@@ -25,6 +25,7 @@ export default class ReportsScreen extends Component {
         hasCameraPermission: false,
         hasGalleryPermission: false,
         location:null,
+        userId:this.props.navigation.getParam('userId')
     }
 
     updateReport = (photo) =>{
@@ -34,32 +35,27 @@ export default class ReportsScreen extends Component {
 
     switchToHome = () => this.props.navigation.navigate('Home')
     switchToCamera = async () =>  {
-        if (this.state.hasCameraPermission)
-            this.props.navigation.navigate('Camera',{updateReport:this.updateReport})
-        const { status } = await Permissions.askAsync(Permissions.CAMERA)
-        if (status === 'granted') {
-            this.setState({hasCameraPermission: status === 'granted'});
-            this.props.navigation.navigate('Camera',{updateReport:this.updateReport})
+        let photo = await ImagePicker.launchCameraAsync()
+        if (!photo.canceled) {
+            this.setState({photo})
         }
+        return Promise.resolve()
     }
 
     switchToGallery = async () =>  {
-        if (this.state.hasGalleryPermission)
-            this.props.navigation.navigate('Gallery',{updateReport:this.updateReport})
-        const { status } = await Permissions.askAsync(Permissions.Permissions.CAMERA_ROLL);
-        if (status === 'granted') {
-            this.setState({hasGalleryPermission: status === 'granted'});
-            this.props.navigation.navigate('Gallery', {updateReport: this.updateReport})
+        let photo = await ImagePicker.launchImageLibraryAsync()
+        if (!photo.canceled) {
+            this.setState({photo})
         }
+        return Promise.resolve()
     }
 
     report = async () => {
         if(this.state.photo !== null) {
             const response = await fetch(this.state.photo.uri);
             const blob = await response.blob();
-            let userId = "noam";
 
-            const refStorage = firebase.storage().ref().child("images/" + userId);
+            const refStorage = firebase.storage().ref().child("images/" + this.state.userId);
             await refStorage.put(blob);
         }
         await this.sendReport();
@@ -74,7 +70,7 @@ export default class ReportsScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": "noam12",
+                "userId": this.state.userId,
                 "latitude": this.state.location.location.coords.latitude,
                 "longitude": this.state.location.location.coords.longitude,
                 "type": this.state.reportType,

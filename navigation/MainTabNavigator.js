@@ -7,19 +7,13 @@ import HomeScreen from '../screens/HomeScreen'
 import LinksScreen from '../screens/LinksScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import ReportsScreen from '../screens/ReportsScreen'
-import CameraScreen from '../screens/CameraScreen'
-import GalleryScreen from '../screens/GalleryScreen'
-
 
 const HomeStack = createStackNavigator({
         Home: HomeScreen,
         Reports: ReportsScreen,
-        Camera: CameraScreen,
-        Gallery:GalleryScreen
     },
-    {
-        initialRouteName: 'Home',
-    })
+    {initialRouteKey: 'Home', initialRouteName: 'Home'}
+)
 
 HomeStack.navigationOptions = {
     tabBarLabel: 'Home',

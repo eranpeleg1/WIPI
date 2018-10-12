@@ -2,7 +2,7 @@ import { AppLoading, } from 'expo';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import * as firebase from "firebase";
-
+import fireBaseUtils from '../firebase/firebase'
 export default class AuthLoadingScreen extends React.Component {
     static navigationOptions = {
         header: null,
@@ -11,11 +11,13 @@ export default class AuthLoadingScreen extends React.Component {
     _bootstrapAsync = async () => {
         console.log("handler: "+this);
         firebase.auth().onAuthStateChanged((user)=>{
-            user
-                ?
-                this.props.navigation.navigate('Main',{userId:user.uid})
-                :
-                this.props.navigation.navigate('Login')
+           if (user){
+               fireBaseUtils.storeUserDetails(user)
+               this.props.navigation.navigate({routeName: 'Home', key: 'Home', params: {userId: user.uid}})
+           }
+           else {
+               this.props.navigation.navigate('Login')
+           }
         })
     }
 
@@ -33,7 +35,7 @@ export default class AuthLoadingScreen extends React.Component {
     _handleLoadingError = error => {
         // In this case, you might want to report the error to your error
         // reporting service, for example Sentry
-        console.warn(error);
+        console.log(error);
     };
     _handleFinishLoading = msg => {
         console.log(msg);

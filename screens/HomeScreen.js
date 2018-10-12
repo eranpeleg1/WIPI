@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
-import {Constants, MapView, Location, Permissions} from 'expo';
+import {Constants, MapView, Location, Permissions, AppLoading} from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -26,16 +26,28 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode: false,
         address: null,
-        loggedInUserId: 'gcoc4LrDzVbaAQrWhVrYL2rJn572',
-        mode: 'default'
+        loggedInUserId: this.props.navigation.state.params.userId,
+        mode: 'findLocation'
     };
-    async componentDidMount() {
+
+    _bootstrapAsync = async () => {
         await registerForPushNotificationsAsync(this.state.loggedInUserId)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
-            this.setState({location, address, mapRegion, hasLocationPermissions});
+            const mode = location ? 'default': 'findLocation'
+            this.setState({location, address, mapRegion, hasLocationPermissions, mode});
         }
+        return Promise.resolve()
     }
+
+    _handleLoadingError = error => {
+        // In this case, you might want to report the error to your error
+        // reporting service, for example Sentry
+        console.log(error);
+    };
+    _handleFinishLoading = msg => {
+        console.log(msg);
+    };
 
     park() {
         console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
@@ -131,12 +143,21 @@ export default class HomeScreen extends Component {
         this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}, hasLocationPermissions})
     }
 
-    switchToReport = () => this.props.navigation.navigate('Reports')
+    switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.userId})
 
     render() {
         let res;
         console.log(this.state.mode);
         switch (this.state.mode) {
+            case 'findLocation':
+                res = (
+                    <AppLoading
+                        startAsync={this._bootstrapAsync}
+                        onError={this._handleLoadingError}
+                        onFinish={this._handleFinishLoading}
+                    />
+                )
+                break
             case 'default':
                 res =
                     (<View style={styles.container}>
