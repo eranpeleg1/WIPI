@@ -5,7 +5,8 @@ import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import fireBaseUtils from '../firebase/firebase'
+import carLogo from '../assets/images/carSmall.png';
 
 import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
@@ -27,30 +28,19 @@ export default class HomeScreen extends Component {
         parkingMode: false,
         address: null,
         loggedInUserId: this.props.navigation.state.params.userId,
-        mode: 'findLocation'
+        mode: 'default',
+        reports:[]
     };
-
-    _bootstrapAsync = async () => {
+    async componentWillMount() {
+        await fireBaseUtils.getReports(this)
         await registerForPushNotificationsAsync(this.state.loggedInUserId)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
-            const mode = location ? 'default': 'findLocation'
-            this.setState({location, address, mapRegion, hasLocationPermissions, mode});
+            this.setState({location, address, mapRegion, hasLocationPermissions});
         }
-        return Promise.resolve()
     }
 
-    _handleLoadingError = error => {
-        // In this case, you might want to report the error to your error
-        // reporting service, for example Sentry
-        console.log(error);
-    };
-    _handleFinishLoading = msg => {
-        console.log(msg);
-    };
-
     park() {
-        console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
         fetch("https://us-central1-wipi-cee66.cloudfunctions.net/markUserParking", {
             method: 'POST',
             headers: {
@@ -143,21 +133,15 @@ export default class HomeScreen extends Component {
         this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}, hasLocationPermissions})
     }
 
+
     switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.userId})
 
     render() {
-        let res;
-        console.log(this.state.mode);
+        console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
+        console.log('user id is (from park) ', JSON.stringify(this.props.navigation.state.params.userId))
+        if (this.state.location === null)
+            return (<AppLoading/>)
         switch (this.state.mode) {
-            case 'findLocation':
-                res = (
-                    <AppLoading
-                        startAsync={this._bootstrapAsync}
-                        onError={this._handleLoadingError}
-                        onFinish={this._handleFinishLoading}
-                    />
-                )
-                break
             case 'default':
                 res =
                     (<View style={styles.container}>
@@ -176,8 +160,35 @@ export default class HomeScreen extends Component {
                                             region={this.state.mapRegion}
                                             showsUserLocation={true}
                                             showsMyLocationButton={false}
-                                            followsUserLocation={true}
-                                        />
+                                            followsUserLocation={true}>
+                                            {
+                                                this.state.reports.map((report,key)=> {
+                                                    console.log('aaaaaaaaaaaaa      ',JSON.stringify(report))
+                                                    console.log('bbbbbbbbbbbbb      ',JSON.stringify(report.l))
+                                                    console.log('ccccccccccccc      ',JSON.stringify(report.l[0]))
+                                                    const coordinate = {latitude: report.l[0], longitude: report.l[1]}
+                                                    let image
+                                                    switch (report.reportType){
+                                                        case 'bicycle officer':
+                                                            image = carLogo
+                                                            break
+                                                        case 'parking officer':
+                                                            image = carLogo
+                                                            break
+                                                        case 'towing truck':
+                                                            image = carLogo
+                                                            break
+                                                    }
+                                                    return (
+                                                        <MapView.Marker
+                                                            coordinate={coordinate}
+                                                            title={report.reportType}
+                                                            image={image}
+                                                            key={key}
+                                                        />
+                                                    )
+                                                })}
+                                        </MapView>
 
                             }
                             <SubView showValue={300}
@@ -225,7 +236,7 @@ export default class HomeScreen extends Component {
                                         />
                                     </TouchableOpacity>
                                 </View>
-                                </View>
+                            </View>
                             <View style={styles.reportWrapper}>
                                 <TouchableOpacity
                                     style={[styles.mapButton, styles.reportButton]}
@@ -241,6 +252,7 @@ export default class HomeScreen extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
+
                     )
                 break
             case 'AutoComplete':

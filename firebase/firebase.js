@@ -1,18 +1,32 @@
 import * as firebase from "firebase";
+import _ from "lodash";
 
-function storeUserDetails(user) {
+async function storeUserDetails(user) {
     const real = firebase.database();
     const {displayName, email, photoURL} = user
-    real.ref('Users/' + user.uid).set({name: displayName, email, photoURL});
+    return real.ref('Users/' + user.uid).set({name: displayName, email, photoURL});
 }
 
-const getReports = () => {
+const getReports = async (self) => {
     const real = firebase.database();
-    return real.ref('Reports/');
+    const reports = real.ref()
+    await reports.once('value', snapshot => {
+        const reports = snapshot.val().Reports
+        const users = snapshot.val().Users
+
+        let bycicleOfficer = _.map(_.values(_.merge(reports.bicycleOfficer, reports['bicycleOfficer-Locations'], users)),value => {value.reportType='bicycle officer'; return value})
+        let parkingOfficer = _.map(_.values(_.merge(reports.parkingOfficer, reports['parkingOfficer-Locations'],users)),value => {value.reportType='parking officer'; return value})
+        let towingTruck = _.map(_.values(_.merge(reports.towingTruck, reports['towingTruck-Locations'],users)),value => {value.reportType='towing truck'; return value})
+        self.setState({reports:_.filter(_.concat(parkingOfficer, bycicleOfficer, towingTruck),report=> report.l !== undefined)})
+
+    })
 }
 
-
-export default{
+export default {
     storeUserDetails,
     getReports
 }
+
+
+
+

@@ -1,6 +1,6 @@
 import { AppLoading, } from 'expo';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet,View } from 'react-native';
 import * as firebase from "firebase";
 import fireBaseUtils from '../firebase/firebase'
 export default class AuthLoadingScreen extends React.Component {
@@ -8,11 +8,11 @@ export default class AuthLoadingScreen extends React.Component {
         header: null,
     };
 
-    _bootstrapAsync = async () => {
+    async componentWillMount() {
         console.log("handler: "+this);
-        firebase.auth().onAuthStateChanged((user)=>{
+        firebase.auth().onAuthStateChanged(async (user)=>{
            if (user){
-               fireBaseUtils.storeUserDetails(user)
+               await fireBaseUtils.storeUserDetails(user)
                this.props.navigation.navigate({routeName: 'Home', key: 'Home', params: {userId: user.uid}})
            }
            else {
@@ -24,22 +24,11 @@ export default class AuthLoadingScreen extends React.Component {
     // Render any loading content that you like here
     render() {
         return (
-            <AppLoading
-                startAsync={this._bootstrapAsync}
-                onError={this._handleLoadingError}
-                onFinish={this._handleFinishLoading}
-            />
+            <View/>
         );
     }
 
-    _handleLoadingError = error => {
-        // In this case, you might want to report the error to your error
-        // reporting service, for example Sentry
-        console.log(error);
-    };
-    _handleFinishLoading = msg => {
-        console.log(msg);
-    };
+
 }
 
 const styles = StyleSheet.create({
