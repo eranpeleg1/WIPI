@@ -51,19 +51,22 @@ export default class ReportsScreen extends Component {
     }
 
     report = async () => {
-        if(this.state.photo !== null) {
+
+        let statusCode = await this.sendReport();
+
+        if (this.state.photo !== null && statusCode === 201) {
             const response = await fetch(this.state.photo.uri);
             const blob = await response.blob();
 
-            const refStorage = firebase.storage().ref().child("images/" + this.state.userId);
+            const refStorage = firebase.storage().ref().child("images/" + this.state.reportType +"/"+ this.state.userId);
             await refStorage.put(blob);
         }
-        await this.sendReport();
+
+        this.switchToHome();
     }
 
-    sendReport = () =>{
-        console.log("server");
-        fetch("https://us-central1-wipi-cee66.cloudfunctions.net/addReportAction", {
+    async sendReport (){
+        let response = await fetch("https://us-central1-wipi-cee66.cloudfunctions.net/addReportAction", {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -76,9 +79,9 @@ export default class ReportsScreen extends Component {
                 "type": this.state.reportType,
                 "text": this.state.text
             })
-        }).then(() => {
-            this.switchToHome();
-        })
+        });
+        console.log(response.status)
+        return (response.status)
     }
 
 
