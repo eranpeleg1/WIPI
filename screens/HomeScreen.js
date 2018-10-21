@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
+
 import {Constants, MapView, Location, Permissions, AppLoading} from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
@@ -73,13 +74,13 @@ export default class HomeScreen extends Component {
         location: null,
         parkingMode: false,
         address: null,
-        loggedInUserId: this.props.navigation.state.params.userId,
+        loggedInUser: this.props.navigation.state.params.user,
         mode: 'default',
         reports:[]
     };
     async componentWillMount() {
         await fireBaseUtils.getReports(this)
-        await registerForPushNotificationsAsync(this.state.loggedInUserId)
+        await registerForPushNotificationsAsync(this.state.loggedInUser.id)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
             this.setState({location, address, mapRegion, hasLocationPermissions});
@@ -94,7 +95,7 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.loggedInUserId,
+                "userId": this.state.loggedInUser.id,
                 "latitude": this.state.location.coords.latitude,
                 "longitude": this.state.location.coords.longitude
             })
@@ -113,7 +114,7 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.loggedInUserId
+                "userId": this.state.loggedInUser.id
             })
         }).then(response => {
             // console.log(response);
@@ -182,13 +183,14 @@ export default class HomeScreen extends Component {
     }
 
 
-    switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.userId})
+    switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.user.id})
 
     render() {
-        console.log('user id is (from park) ', this.props.navigation.getParam('userId'));
-        console.log('user id is (from park) ', JSON.stringify(this.props.navigation.state.params.userId))
+        console.log('user id is (from park) ', this.props.navigation.getParam('user'));
+        console.log('user id is (from park) ', JSON.stringify(this.props.navigation.state.params.user.id))
         if (this.state.location === null)
             return (<AppLoading/>)
+        let res
         switch (this.state.mode) {
             case 'default':
                 res =
@@ -244,7 +246,7 @@ export default class HomeScreen extends Component {
                                      show={this.state.parkingMode}
                                      endPark={this.endPark}
                                      height={300}
-                                     backgroundColor={'#3B9BFF'}
+                                     backgroundColor={'#3C9BFF'}
                                      address={this.state.address}
                             />
                             <View style={styles.textInputContainer}

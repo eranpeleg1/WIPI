@@ -13,7 +13,8 @@ export default class AuthLoadingScreen extends React.Component {
         firebase.auth().onAuthStateChanged(async (user)=>{
            if (user){
                await fireBaseUtils.storeUserDetails(user)
-               this.props.navigation.navigate({routeName: 'Home', key: 'Home', params: {userId: user.uid}})
+               this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {user}})
+               this.props.navigation.navigate({routeName: 'Home', key: 'Home', params: {user}})
            }
            else {
                this.props.navigation.navigate('Login')

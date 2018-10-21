@@ -355,13 +355,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#FF6E69',
     },
     officerButton: {
-        backgroundColor: '#3B9BFF',
+        backgroundColor: '#3C9BFF',
     },
     towingButton: {
         backgroundColor: '#ffa733',
     },
     bicycleButton: {
-        backgroundColor: '#80FF00',
+        backgroundColor: '#3cff6b',
     },
     mapButtonContainer:{
         position:'absolute',
@@ -378,4 +378,4 @@ const styles = StyleSheet.create({
     reportButton:{
         alignItems: 'center',
     }
-});
+})

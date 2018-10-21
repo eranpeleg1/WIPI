@@ -45,7 +45,9 @@ LinksStack.navigationOptions = {
 
 const SettingsStack = createStackNavigator({
     Settings: SettingsScreen,
-})
+},
+    {initialRouteKey: 'Settings', initialRouteName: 'Settings'}
+    )
 
 SettingsStack.navigationOptions = {
     tabBarLabel: 'Settings',
