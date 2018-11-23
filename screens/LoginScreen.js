@@ -13,6 +13,7 @@ export default class LoginScreen extends React.Component {
             iosClientId: '824034155023-obq3arcrrkcko3nvfg987mkf0r1lhfpq.apps.googleusercontent.com',
             scopes: ['profile', 'email'],
             webClientId:'824034155023-v227b5r2tnaqm1723m0bis6pg9b52qq2.apps.googleusercontent.com',
+            behavior: 'web'
         });
 
         if (result.type === 'success') {
@@ -21,7 +22,6 @@ export default class LoginScreen extends React.Component {
                 console.log(error);
             })
         }
-        //this.props.navigation.navigate('Main');
     }
 
     async loginWithFacebook(){
@@ -35,7 +35,6 @@ export default class LoginScreen extends React.Component {
                 console.log(error);
             })
         }
-        //this.props.navigation.navigate('Main');
     }
 
     render() {

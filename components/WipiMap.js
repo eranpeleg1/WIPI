@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View,TouchableOpacity , Image,Text } from 'react-native';
-import { Constants, Location, Permissions,MapView } from 'expo';
+import { Constants, Location, Permissions } from 'expo';
+import { }
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 const carLogo=require("../assets/images/carSmall.png");
 
@@ -49,7 +50,6 @@ export default class WipiMap extends React.Component {
                 fetchDetails={true}
                 renderDescription={row => row.description} // custom description render
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                    console.log(data, details);
                 }}
 
                 getDefaultValue={() => ''}

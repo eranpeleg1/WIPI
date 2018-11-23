@@ -8,20 +8,21 @@ let {height, width} = Dimensions.get('window');
 const radius = parseInt(width/8)
 const delimiter = radius*2
 import * as firebase from "firebase";
-import googleSans from '../assets/fonts/GoogleSans-Bold.ttf'
 import Icon from 'react-native-vector-icons/FontAwesome';
 export default class SettingsScreen extends React.Component {
     static navigationOptions = {
         title: '#Profile',
         headerStyle:{
-
             backgroundColor: '#FFA733',
             height:134
         },
         headerTitleStyle: {
-            justifyContent: 'flex-end',
-            fontWeight: 'bold',
-            color:'#ffffff',
+            justifyContent: 'flex-start',
+            color:'white',
+            fontFamily:'google-sans-bold',
+            fontSize:30,
+            fontWeight:undefined
+
         }
     }
 
@@ -41,12 +42,9 @@ export default class SettingsScreen extends React.Component {
          * content, we just wanted to give you a quick view of your config */
 
         let photoURL = this.state.user.photoURL
-        console.log('user in settingsssss       ',this.state.user)
-
         if (_.includes(photoURL, 'facebook')){
             photoURL = `${photoURL}/?type=large`
         }
-        console.log(photoURL)
         return (
             <View style={styles.container}>
                 <View style={styles.pictureWrapper}>
@@ -101,7 +99,7 @@ export default class SettingsScreen extends React.Component {
                         name="sign-out"
                         onPress={()=>firebase.auth().signOut()}
                         style={styles.logoutButton}
-                        fontFamily={googleSans}
+                        fontFamily={'google-sans-medium'}
                         flexDirection={flex}
                         iconRight={false}>{space+'Logout'}
                     </Icon.Button>
@@ -133,9 +131,11 @@ export default class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent:'center',
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#3c9bff',
+        
     },
     picture: {
         resizeMode:'stretch',
@@ -144,10 +144,11 @@ const styles = StyleSheet.create({
         borderRadius:radius,
     },
     logoutButton: {
+        bottom:0,
         width: '100%',
         height: 40,
         bottom: 0,
-        backgroundColor: "#DD4B39",
+        backgroundColor: "#FF6969",
     },
     pictureWrapper:{
         justifyContent:'center',
@@ -162,11 +163,13 @@ const styles = StyleSheet.create({
         margin:5,
         fontWeight:'bold',
         fontSize:25,
-        color:'#ffffff'
+        color:'#ffffff',
+        fontFamily:'google-sans-medium',
     },
     totalReportsText:{
         fontSize:15,
-        color:'#000000'
+        color:'#8A8A8A',
+        fontFamily:'google-sans-medium'
     },
     totalReportsWrapper:{
         position:'absolute',
@@ -182,7 +185,8 @@ const styles = StyleSheet.create({
     },
     peopleSavedText:{
         fontSize:15,
-        color:'#000000'
+        color:'#8A8A8A',
+        fontFamily:'google-sans-medium'
     },
     moneySavedWrapper:{
         marginTop:100,
@@ -191,11 +195,13 @@ const styles = StyleSheet.create({
     },
     moneySavedText:{
         fontSize:15,
-        color:'#000000'
+        color:'#8A8A8A',
+        fontFamily:'google-sans-medium'
     },
     numberText:{
         fontSize:25,
-        color:'#000000'
+        color:'#434343',
+        fontFamily:'google-sans-medium'
     },
     starsWrapper:{
        flexDirection:'row'
@@ -206,13 +212,14 @@ const styles = StyleSheet.create({
     },
     levelText:{
         fontSize:20,
-        color:'#000000'
+        color:'#8A8A8A',
+        fontFamily:'google-sans-medium'
     },
     stats:{
-        marginTop:10,
-        height:height/2 - 70,
+        marginTop:15,
+        height:height*0.366,
         width:width/3*2,
         backgroundColor:'#ffffff',
-        borderRadius:8
+        borderRadius:8,
     }
 })

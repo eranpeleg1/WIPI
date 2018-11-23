@@ -8,13 +8,59 @@ export default class AuthLoadingScreen extends React.Component {
         header: null,
     };
 
+
+    createNewUserInstance = async (userData)=> {
+       
+      await fetch("https://us-central1-wipi-cee66.cloudfunctions.net/initUserInstance", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+    }
+
+    checkIfUserExist = async (userId)=>{
+       return new Promise(async (resolve,reject)=>{
+
+            await fetch("https://us-central1-wipi-cee66.cloudfunctions.net/getUserInstance", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "userId": userId
+                })
+          })
+          .then(async (response)=>{
+            const responseObj = await response.json();
+            resolve(responseObj.userId !== undefined)
+        }).catch((err)=>reject(`this is error!!!  ${error} `));
+
+    })
+
+    }
+
     async componentWillMount() {
-        console.log("handler: "+this);
         firebase.auth().onAuthStateChanged(async (user)=>{
            if (user){
-               await fireBaseUtils.storeUserDetails(user)
+                const isUserExist = await this.checkIfUserExist(user.uid);
+                console.log('is userExist' ,isUserExist);
+                if(!isUserExist){
+                    const {uid,displayName,photoURL,email} = user
+                    const userData = {
+                        userId:uid,
+                        displayName,
+                        photoURL,
+                        email
+                    }
+                    this.createNewUserInstance(userData);
+                }
+              await fireBaseUtils.storeUserDetails(user)
                this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {user}})
-               this.props.navigation.navigate({routeName: 'Home', key: 'Home', params: {user}})
+               this.props.navigation.navigate({routeName: 'Map', key: 'Map', params: {user}})
            }
            else {
                this.props.navigation.navigate('Login')

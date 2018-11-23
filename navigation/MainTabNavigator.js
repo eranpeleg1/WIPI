@@ -1,66 +1,67 @@
 import React from 'react'
 import { Platform } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
-
 import TabBarIcon from '../components/TabBarIcon'
 import HomeScreen from '../screens/HomeScreen'
 import LinksScreen from '../screens/LinksScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import ReportsScreen from '../screens/ReportsScreen'
 
-const HomeStack = createStackNavigator({
-        Home: HomeScreen,
+const MapStack = createStackNavigator({
+        Map: HomeScreen,
         Reports: ReportsScreen,
     },
-    {initialRouteKey: 'Home', initialRouteName: 'Home'}
+    {initialRouteKey: 'Map', initialRouteName: 'Map'}
 )
 
-HomeStack.navigationOptions = {
-    tabBarLabel: 'Home',
+MapStack.navigationOptions = {
+    tabBarLabel: 'Map',
     tabBarIcon: ({ focused }) => (
         <TabBarIcon
             focused={focused}
-            name={
-                Platform.OS === 'ios'
-                    ? `ios-information-circle${focused ? '' : '-outline'}`
-                    : 'md-information-circle'
-            }
+            name={'map'}
         />
     ),
 }
 
-const LinksStack = createStackNavigator({
-    Links: LinksScreen,
-})
-
-LinksStack.navigationOptions = {
-    tabBarLabel: 'Links',
-    tabBarIcon: ({ focused }) => (
-        <TabBarIcon
-            focused={focused}
-            name={Platform.OS === 'ios' ? `ios-link${focused ? '' : '-outline'}` : 'md-link'}
-        />
-    ),
-}
-
-const SettingsStack = createStackNavigator({
-    Settings: SettingsScreen,
-},
+const SettingsStack = createStackNavigator
+(
+    {
+        Settings: SettingsScreen,
+    },
     {initialRouteKey: 'Settings', initialRouteName: 'Settings'}
-    )
+
+)
 
 SettingsStack.navigationOptions = {
     tabBarLabel: 'Settings',
     tabBarIcon: ({ focused }) => (
-        <TabBarIcon
-            focused={focused}
-            name={Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options'}
-        />
+      <TabBarIcon
+          name={'settings'}
+          focused={focused}
+
+      />
     ),
 }
 
+const NotificationsStack = createStackNavigator
+    (
+        { Notifications: LinksScreen },
+        {initialRouteKey: 'Notifications', initialRouteName: 'Notifications'}
+    )
+
+NotificationsStack.navigationOptions = {
+    tabBarLabel: 'Notifications',
+    tabBarIcon: ({ focused }) => (
+        <TabBarIcon
+            focused={focused}
+            name={'notifications'}
+        />
+    )
+}
+
 export default createBottomTabNavigator({
-    HomeStack,
-    LinksStack,
+    MapStack,
     SettingsStack,
+    NotificationsStack,
 })

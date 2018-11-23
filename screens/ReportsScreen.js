@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { ExpoConfigView } from '@expo/samples'
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native'
 import Icon from "react-native-vector-icons/MaterialIcons";
 import IconCommunity from "react-native-vector-icons/MaterialCommunityIcons";
@@ -33,7 +32,7 @@ export default class ReportsScreen extends Component {
 
     }
 
-    switchToHome = () => this.props.navigation.navigate('Home')
+    switchToHome = () => this.props.navigation.navigate('Map')
     switchToCamera = async () =>  {
         let photo = await ImagePicker.launchCameraAsync()
         if (!photo.canceled) {
@@ -80,7 +79,6 @@ export default class ReportsScreen extends Component {
                 "text": this.state.text
             })
         });
-        console.log(response.status)
         return (response.status)
     }
 
@@ -118,7 +116,6 @@ export default class ReportsScreen extends Component {
             backgroundColor = {backgroundColor: '#cc6600'}
         else if (this.state.reportType === 'bicycleOfficer')
             backgroundColor = {backgroundColor: '#006633'}
-        console.log("reports state"+JSON.stringify(this.state))
 
         return (
             <View style={[styles.container,backgroundColor]} >

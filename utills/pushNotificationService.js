@@ -1,6 +1,5 @@
 import { Permissions, Notifications } from 'expo';
 export  const registerForPushNotificationsAsync = async (userId) => {
-    console.log("Entered to the push notifications registration.");
 
     const { status: existingStatus } = await Permissions.getAsync(
         Permissions.NOTIFICATIONS
@@ -18,11 +17,10 @@ export  const registerForPushNotificationsAsync = async (userId) => {
     if (finalStatus !== 'granted') {
         return;
     }
-    console.log("before.");
+
     // Get the token that uniquely identifies this device
     let token = await Notifications.getExpoPushTokenAsync();
 
-    console.log("after.");
     // POST the token to your backend server from where you can retrieve it to send push notifications.
     fetch("https://us-central1-wipi-cee66.cloudfunctions.net/addPushTokenByUser", {
         method: 'POST',
@@ -35,6 +33,5 @@ export  const registerForPushNotificationsAsync = async (userId) => {
             "expoPushToken": token
         })
     }).then(response => {
-        console.log(response)
     });
 }

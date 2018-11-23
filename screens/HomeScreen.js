@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, TextInput, PixelRatio} from 'react-native';
-
-import {Constants, MapView, Location, Permissions, AppLoading} from 'expo';
+import {Constants, MapView, Location, AppLoading} from 'expo';
 import SubView from "../components/SubView"
 import GoogleAutoComplete from '../components/GoogleAutocomplete';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import fireBaseUtils from '../firebase/firebase'
-import carLogo from '../assets/images/carSmall.png';
+import carLogo from '../assets/svgs/copIcon.svg';
+import Modal from 'react-native-modal';
+import { IntentLauncherAndroid } from 'expo';
+
 
 import {registerForPushNotificationsAsync} from '../utills/pushNotificationService'
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
@@ -16,6 +18,7 @@ let {height, width} = Dimensions.get('window');
 
 /* fix for setTimout Issue */
 import {Platform, InteractionManager} from 'react-native';
+import permissionsUtills from '../utills/permissionsUtills';
 
 const _setTimeout = global.setTimeout;
 const _clearTimeout = global.clearTimeout;
@@ -80,7 +83,7 @@ export default class HomeScreen extends Component {
     };
     async componentWillMount() {
         await fireBaseUtils.getReports(this)
-        await registerForPushNotificationsAsync(this.state.loggedInUser.id)
+        await registerForPushNotificationsAsync(this.state.loggedInUser.uid)
         if (this.state.address === null) {
             let {location, mapRegion, address, hasLocationPermissions} = await this._getLocationAsync();
             this.setState({location, address, mapRegion, hasLocationPermissions});
@@ -95,12 +98,11 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.loggedInUser.id,
+                "userId": this.state.loggedInUser.uid,
                 "latitude": this.state.location.coords.latitude,
                 "longitude": this.state.location.coords.longitude
             })
         }).then(response => {
-            // console.log(response);
             this.setState({parkingMode: true})
         })
     }
@@ -114,25 +116,22 @@ export default class HomeScreen extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId": this.state.loggedInUser.id
+                "userId": this.state.loggedInUser.uid
             })
         }).then(response => {
-            // console.log(response);
             this.setState({parkingMode: false})
         })
     }
 
 
-
     _getLocationAsync = async () => {
-        let {status} = await Permissions.askAsync(Permissions.LOCATION);
-        let hasLocationPermissions = (status === 'granted');
         let mapRegion, location, address;
+
+      let hasLocationPermissions = await permissionsUtills.validateLocationServices();
+      console.log('hasLocation',hasLocationPermissions);
         if (hasLocationPermissions) {
             location = await Location.getCurrentPositionAsync({});
-            console.log(location);
             let tempAddress = await Location.reverseGeocodeAsync(location.coords)
-            console.log("address: "+ JSON.stringify(tempAddress))
             tempAddress = tempAddress[0];
             const street = tempAddress.street === null ? "":tempAddress.street
             const name = tempAddress.name === null ? "":tempAddress.name
@@ -168,10 +167,8 @@ export default class HomeScreen extends Component {
     }
 
     setAddress = async (address) => {
-        let {status} = await Permissions.askAsync(Permissions.LOCATION);
-        let hasLocationPermissions = (status === 'granted');
+        
         let location = await Location.geocodeAsync(address.description);
-        console.log("address", location);
         const mapRegion = {
             latitude: location[0].latitude,
             longitude: location[0].longitude,
@@ -179,18 +176,16 @@ export default class HomeScreen extends Component {
             longitudeDelta: 0.001,
         }
 
-        this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}, hasLocationPermissions})
+        this.setState({mapRegion, address, mode: 'default', location:{coords:location[0]}})
     }
 
 
-    switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.user.id})
+    switchToReport = () => this.props.navigation.navigate('Reports', {userId:this.props.navigation.state.params.user.uid})
 
     render() {
-        console.log('user id is (from park) ', this.props.navigation.getParam('user'));
-        console.log('user id is (from park) ', JSON.stringify(this.props.navigation.state.params.user.id))
         if (this.state.location === null)
             return (<AppLoading/>)
-        let res
+        let res;
         switch (this.state.mode) {
             case 'default':
                 res =
@@ -213,9 +208,6 @@ export default class HomeScreen extends Component {
                                             followsUserLocation={true}>
                                             {
                                                 this.state.reports.map((report,key)=> {
-                                                    console.log('aaaaaaaaaaaaa      ',JSON.stringify(report))
-                                                    console.log('bbbbbbbbbbbbb      ',JSON.stringify(report.l))
-                                                    console.log('ccccccccccccc      ',JSON.stringify(report.l[0]))
                                                     const coordinate = {latitude: report.l[0], longitude: report.l[1]}
                                                     let image
                                                     switch (report.reportType){
@@ -241,6 +233,7 @@ export default class HomeScreen extends Component {
                                         </MapView>
 
                             }
+
                             <SubView showValue={300}
                                      hideValue={50}
                                      show={this.state.parkingMode}
@@ -249,14 +242,14 @@ export default class HomeScreen extends Component {
                                      backgroundColor={'#3C9BFF'}
                                      address={this.state.address}
                             />
-                            <View style={styles.textInputContainer}
 
-                            >
+                            <View style={styles.textInputContainer}>
                                 <TextInput style={styles.textInput}
                                            placeholder='Search here'
                                            onFocus={() => this.setState({mode: 'AutoComplete'})}
                                 />
                             </View>
+
                             <View style={styles.buttons}>
                                 <View style={styles.mapButtonContainer}>
                                     <TouchableOpacity
@@ -366,7 +359,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FF6E69',
     },
     parkButton: {
-        backgroundColor: '#3B9BFF'
+        backgroundColor: '#3C9BFF'
     },
 
     locationButton: {

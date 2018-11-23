@@ -40,7 +40,6 @@ export default class SubView extends React.Component {
     }
 
     render() {
-        console.log("sub ",this.props.address)
         let mainText='';
         let secondaryText='';
         let address=this.props.address;
