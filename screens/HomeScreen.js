@@ -120,7 +120,7 @@ export default class HomeScreen extends Component {
             })
         }).then(response => {
             this.setState({parkingMode: false})
-        })
+        }).catch(e=>console.log(e));
     }
 
 

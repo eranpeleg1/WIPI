@@ -18,7 +18,7 @@ export default class LoginScreen extends React.Component {
 
         if (result.type === 'success') {
             const credential=firebase.auth.GoogleAuthProvider.credential(result.idToken);
-            firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(error=> {
+            firebase.auth().signInAndRetrieveDataWithCredential(credential).catch((error)=> {
                 console.log(error);
             })
         }

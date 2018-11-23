@@ -35,9 +35,19 @@ export default class AuthLoadingScreen extends React.Component {
                 })
           })
           .then(async (response)=>{
-            const responseObj = await response.json();
-            resolve(responseObj.userId !== undefined)
-        }).catch((err)=>reject(`this is error!!!  ${error} `));
+            let responseObj;
+            try{
+                 responseObj = await response.json();
+                 console.log('got here');
+                 resolve(responseObj.userId !== undefined)
+
+            }
+            //this is a hack!. only if response comes empty , response.json fails
+            catch(err){
+                resolve(false);
+            }
+            
+        }).catch((err)=>reject(`this is error!!!  ${err} `));
 
     })
 
