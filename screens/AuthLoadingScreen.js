@@ -21,7 +21,7 @@ export default class AuthLoadingScreen extends React.Component {
         })
     }
 
-    checkIfUserExist = async (userId)=>{
+    getUserData = async (userId)=>{
        return new Promise(async (resolve,reject)=>{
 
             await fetch("https://us-central1-wipi-cee66.cloudfunctions.net/getUserInstance", {
@@ -38,8 +38,7 @@ export default class AuthLoadingScreen extends React.Component {
             let responseObj;
             try{
                  responseObj = await response.json();
-                 console.log('got here');
-                 resolve(responseObj.userId !== undefined)
+                 resolve(responseObj)
 
             }
             //this is a hack!. only if response comes empty , response.json fails
@@ -56,8 +55,8 @@ export default class AuthLoadingScreen extends React.Component {
     async componentWillMount() {
         firebase.auth().onAuthStateChanged(async (user)=>{
            if (user){
-                const isUserExist = await this.checkIfUserExist(user.uid);
-                console.log('is userExist' ,isUserExist);
+                const userData = await this.getUserData(user.uid);
+                const isUserExist = userData && userData.userId 
                 if(!isUserExist){
                     const {uid,displayName,photoURL,email} = user
                     const userData = {
@@ -66,11 +65,14 @@ export default class AuthLoadingScreen extends React.Component {
                         photoURL,
                         email
                     }
-                    this.createNewUserInstance(userData);
+                    this.createNewUserInstance(userData)
                 }
-              await fireBaseUtils.storeUserDetails(user)
-               this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {user}})
-               this.props.navigation.navigate({routeName: 'Map', key: 'Map', params: {user}})
+                const userObject = {
+                    wipi:userData,
+                    firebase:user
+                }
+               this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {userObject}})
+               this.props.navigation.navigate({routeName: 'Map', key: 'Map', params: {userObject}})
            }
            else {
                this.props.navigation.navigate('Login')

@@ -1,5 +1,4 @@
 import React from 'react';
-import { ExpoConfigView } from '@expo/samples';
 import {Text, View, StyleSheet, Dimensions, TouchableOpacity, Image,Platform} from 'react-native';
 import {Constants} from "expo";
 import _ from 'lodash'
@@ -9,6 +8,7 @@ const radius = parseInt(width/8)
 const delimiter = radius*2
 import * as firebase from "firebase";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { NavigationEvents } from "react-navigation";
 export default class SettingsScreen extends React.Component {
     static navigationOptions = {
         title: '#Profile',
@@ -27,9 +27,33 @@ export default class SettingsScreen extends React.Component {
     }
 
     state={
-        user: {...this.props.navigation.state.params.user,rank:3}
+        user: {...this.props.navigation.state.params.userObject.wipi,rank:3},
+        fineFactor: 150
     }
-
+    
+     pollUserCounters = async ()=> {
+        await fetch("https://us-central1-wipi-cee66.cloudfunctions.net/getUserInstance", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": this.state.user.userId
+              
+            })
+        }).then(async (response) => {
+            
+            const responseObj = await response.json();
+            console.log('response obj is ', responseObj);
+            this.setState(
+                {   
+                    user:responseObj,
+                });
+            Promise.resolve();
+        })
+    }
+    
     render() {
         let space="";
         let flex="row";
@@ -46,7 +70,11 @@ export default class SettingsScreen extends React.Component {
             photoURL = `${photoURL}/?type=large`
         }
         return (
+             
             <View style={styles.container}>
+            <NavigationEvents
+                onWillFocus={this.pollUserCounters}
+            />
                 <View style={styles.pictureWrapper}>
                     <Image
                         style = {styles.picture}
@@ -58,10 +86,10 @@ export default class SettingsScreen extends React.Component {
                         {this.state.user.displayName}
                     </Text>
                 </View>
-                <View style={styles.stats}>
+                {/* <View style={styles.stats}> */}
                     <View style={styles.totalReportsWrapper}>
                         <Text style={styles.numberText}>
-                            {36}
+                            {this.state.user.counters.totalReports}
                         </Text>
                         <Text style={styles.totalReportsText}>
                             {'Total Reports'}
@@ -69,7 +97,9 @@ export default class SettingsScreen extends React.Component {
                     </View>
                     <View style={styles.peopleSavedWrapper}>
                         <Text style={styles.numberText}>
-                            {24}
+                            {
+                                this.state.user.counters.totalPeopleSaved    
+                            }
                         </Text>
                         <Text style={styles.peopleSavedText}>
                             {'People Saved'}
@@ -77,7 +107,7 @@ export default class SettingsScreen extends React.Component {
                     </View>
                     <View style={styles.moneySavedWrapper}>
                         <Text style={styles.numberText}>
-                            {'5600₪'}
+                            {`${this.state.user.counters.totalPeopleSaved * this.state.fineFactor}₪`}
                         </Text>
                         <Text style={styles.moneySavedText}>
                             {'Money Saved'}
@@ -95,15 +125,17 @@ export default class SettingsScreen extends React.Component {
                             {'Level:  Cool Kid'}
                         </Text>
                     </View>
-                    <Icon.Button
-                        name="sign-out"
-                        onPress={()=>firebase.auth().signOut()}
-                        style={styles.logoutButton}
-                        fontFamily={'google-sans-medium'}
-                        flexDirection={flex}
-                        iconRight={false}>{space+'Logout'}
-                    </Icon.Button>
-                </View>
+                    <View  style={styles.logoutWrapper}>
+                        <Icon.Button
+                            name="sign-out"
+                            onPress={()=>firebase.auth().signOut()}
+                            style={styles.logoutButton}
+                            fontFamily={'google-sans-medium'}
+                            flexDirection={flex}
+                            iconRight={false}>{space+'Logout'}
+                        </Icon.Button>
+                    </View>
+                {/* </View> */}
             </View>)
     }
 }
@@ -143,11 +175,15 @@ const styles = StyleSheet.create({
         height: delimiter,
         borderRadius:radius,
     },
+    logoutButtonWrapper:{
+        flex:1,
+        top:20
+
+    },
     logoutButton: {
         bottom:0,
         width: '100%',
-        height: 40,
-        bottom: 0,
+        height: 50,
         backgroundColor: "#FF6969",
     },
     pictureWrapper:{
@@ -168,7 +204,7 @@ const styles = StyleSheet.create({
     },
     totalReportsText:{
         fontSize:15,
-        color:'#8A8A8A',
+        color:'#ffffff',
         fontFamily:'google-sans-medium'
     },
     totalReportsWrapper:{
@@ -179,28 +215,28 @@ const styles = StyleSheet.create({
     },
     peopleSavedWrapper:{
         position:'absolute',
-        left:15,
-        top:15,
+        left:30,
+        top:30,
         alignItems:'center'
     },
     peopleSavedText:{
         fontSize:15,
-        color:'#8A8A8A',
+        color:'#FFA733',
         fontFamily:'google-sans-medium'
     },
     moneySavedWrapper:{
-        marginTop:100,
+        marginTop:20,
         alignSelf:'center',
         alignItems:'center'
     },
     moneySavedText:{
         fontSize:15,
-        color:'#8A8A8A',
+        color:'#ffffff',
         fontFamily:'google-sans-medium'
     },
     numberText:{
         fontSize:25,
-        color:'#434343',
+        color:'#FFA733',
         fontFamily:'google-sans-medium'
     },
     starsWrapper:{
