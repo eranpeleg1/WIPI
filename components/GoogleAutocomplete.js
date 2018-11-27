@@ -127,13 +127,15 @@ const styles = StyleSheet.create({
         width
     },
     textInput: {
-        height: 40,
+        height: 30,
         color: '#5d5d5d',
         fontSize: 16,
-        paddingBottom:15,
-        margin:0,
+        paddingBottom:0,
+        marginBottom:18,
         top:2,
-        textAlign:'right'
+        textAlign:'right',
+        elevation:0,
+        zIndex:0
     },
     listView:{
         position:'absolute',
@@ -155,7 +157,8 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
-        elevation: 2,
+        elevation: 3,
+        zIndex:3,
         justifyContent:"center",
         alignItems: 'center',
     },

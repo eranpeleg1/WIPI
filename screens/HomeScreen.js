@@ -199,7 +199,7 @@ export default class HomeScreen extends Component {
                                             ref={map => this.map = map}
                                             provider="google"
                                             customMapStyle={mapStyle}
-                                            style={{alignSelf: 'stretch', height: height, zIndex: 0}}
+                                            style={{alignSelf: 'stretch', height: height, zIndex: 1, elevation:1}}
                                             region={this.state.mapRegion}
                                             showsUserLocation={true}
                                             showsMyLocationButton={false}
@@ -414,10 +414,10 @@ const styles = StyleSheet.create({
         marginTop: 7.5,
         marginLeft: 8,
         marginRight: 8,
-        height: 40,
+        height: 30,
         color: '#5d5d5d',
         fontSize: 16,
-        paddingBottom: 15,
+        paddingBottom: 7,
         margin: 0,
         bottom: 1,
         textAlign: 'right'

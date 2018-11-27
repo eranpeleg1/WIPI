@@ -19,6 +19,7 @@ export default class WipiMap extends React.Component {
             address:""
         }
     }
+
     _getLocationAsync = async () => {
         let {status}  = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
@@ -61,18 +62,7 @@ export default class WipiMap extends React.Component {
                     types: [ "locality", "political", "geocode" ] // default: 'geocode'
                 }}
 
-
-                styles={{
-                    textInputContainer: {
-                        width: "100%",
-                    },
-                    description: {
-                        fontWeight: 'bold'
-                    },
-                    predefinedPlacesDescription: {
-                        color: '#1faadb'
-                    }
-                }}
+                styles={stylesGAC}
 
                // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
                // currentLocationLabel="Current location"
@@ -132,4 +122,67 @@ const styles = StyleSheet.create({
     map:{
         flex: 1,
     },
+});
+
+const stylesGAC = StyleSheet.create({
+    container:{
+        flex:1,
+        paddingTop: Constants.statusBarHeight,
+        height,
+        width
+    },
+    textInput: {
+        height: 30,
+        color: '#5d5d5d',
+        fontSize: 16,
+        paddingBottom:0,
+        marginBottom:18,
+        top:2,
+        textAlign:'right',
+        elevation:0,
+        zIndex:0
+    },
+    listView:{
+        position:'absolute',
+        top:Constants.statusBarHeight+38,
+        zIndex:11,
+        elevation:11,
+        backgroundColor:"white"
+    },
+    textInputContainer: {
+        position: 'absolute',
+        backgroundColor: '#ffffff',
+        height: 38,
+        width:width-20,
+        margin:10,
+        borderWidth: 1,
+        borderRadius: 2,
+        borderColor: '#ddd',
+        borderBottomWidth: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        elevation: 3,
+        zIndex:3,
+        justifyContent:"center",
+        alignItems: 'center',
+    },
+    description: {
+        paddingRight: 10,
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: 'black',
+    },
+    description2: {
+        paddingRight: 10,
+        fontSize: 13,
+        color: '#5d5d5d'
+    },
+    separator: {
+        height: 1
+    },
+    row: {
+        height: 52,
+        padding: 5
+    }
 });
