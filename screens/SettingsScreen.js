@@ -27,7 +27,8 @@ export default class SettingsScreen extends React.Component {
     }
 
     state={
-        user: {...this.props.navigation.state.params.userObject.wipi,rank:3},
+        user: this.props.navigation.state.params.userObject.wipi,
+        rank:2,
         fineFactor: 150
     }
     
@@ -53,7 +54,6 @@ export default class SettingsScreen extends React.Component {
             Promise.resolve();
         })
     }
-    
     render() {
         let space="";
         let flex="row";
@@ -86,44 +86,48 @@ export default class SettingsScreen extends React.Component {
                         {this.state.user.displayName}
                     </Text>
                 </View>
-                {/* <View style={styles.stats}> */}
-                    <View style={styles.totalReportsWrapper}>
-                        <Text style={styles.numberText}>
-                            {this.state.user.counters.totalReports}
-                        </Text>
-                        <Text style={styles.totalReportsText}>
-                            {'Total Reports'}
-                        </Text>
-                    </View>
-                    <View style={styles.peopleSavedWrapper}>
-                        <Text style={styles.numberText}>
-                            {
-                                this.state.user.counters.totalPeopleSaved    
-                            }
-                        </Text>
-                        <Text style={styles.peopleSavedText}>
-                            {'People Saved'}
-                        </Text>
-                    </View>
-                    <View style={styles.moneySavedWrapper}>
-                        <Text style={styles.numberText}>
-                            {`${this.state.user.counters.totalPeopleSaved * this.state.fineFactor}₪`}
-                        </Text>
-                        <Text style={styles.moneySavedText}>
-                            {'Money Saved'}
-                        </Text>
-                    </View>
-                    <View style={styles.rankWrapper}>
+                <View style={styles.rankWrapper}>
                         <View style={styles.starsWrapper}>
-                            {this.state.user.rank>4 ? goldStar : blueStar}
-                            {this.state.user.rank>3 ? goldStar : blueStar}
-                            {this.state.user.rank>2 ? goldStar : blueStar}
-                            {this.state.user.rank>1 ? goldStar : blueStar}
-                            {goldStar}
+                            { this.state.rank>0 ? goldStar : blueStar}
+                            {this.state.rank>1? goldStar : blueStar}
+                            {this.state.rank>2 ? goldStar : blueStar}
+                            {this.state.rank>3 ? goldStar : blueStar}
+                            {this.state.rank>4 ? goldStar : blueStar}
                                 </View>
                         <Text style={styles.levelText}>
                             {'Level:  Cool Kid'}
                         </Text>
+                    </View>
+                    <View style='countersWrapper'>
+                        <View style={styles.countersItem}>
+                            <Text style={styles.numberText}>
+                                {this.state.user.counters.totalReports}
+                            </Text>
+                            <Text style={styles.countersText}>
+                                {'Total Reports'}
+                            </Text>
+                        </View>
+        
+                        <View style={styles.countersItem}>
+                                 <Text style={styles.numberText}>
+                                {
+                                    this.state.user.counters.totalPeopleSaved    
+                                }
+                                </Text>
+                                <Text style={styles.countersText}>
+                                {'People Saved'}
+                                 </Text>
+                        </View>    
+                        <View style={styles.countersItem}>
+                            
+
+                            <Text style={styles.numberText}>
+                                {`${this.state.user.counters.totalPeopleSaved * this.state.fineFactor}₪`}
+                            </Text>
+                            <Text style={styles.countersText}>
+                                {'Money Saved'}
+                            </Text>
+                        </View>
                     </View>
                     <View  style={styles.logoutWrapper}>
                         <Icon.Button
@@ -135,17 +139,18 @@ export default class SettingsScreen extends React.Component {
                             iconRight={false}>{space+'Logout'}
                         </Icon.Button>
                     </View>
-                {/* </View> */}
             </View>)
     }
 }
 
 const styles = StyleSheet.create({
     container: {
+
         flex: 1,
+        flexDirection:'column',
         justifyContent:'center',
         alignItems: 'center',
-        // paddingTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         backgroundColor: '#3c9bff',
         
     },
@@ -156,13 +161,10 @@ const styles = StyleSheet.create({
         borderRadius:radius,
     },
     logoutButtonWrapper:{
-        flex:1,
         top:20
-
     },
     logoutButton: {
-        bottom:0,
-        width: '100%',
+        width: 200,
         height: 50,
         backgroundColor: "#FF6969",
     },
@@ -173,52 +175,16 @@ const styles = StyleSheet.create({
         height: delimiter+3,
         borderRadius:radius,
         borderColor:'#ffffff',
-        borderWidth: 3
+        borderWidth: 3,
     },
     titleText:{
-        margin:15,
+        margin:10,
         fontWeight:'bold',
         fontSize:25,
         color:'#ffffff',
         fontFamily:'google-sans-medium',
     },
-    totalReportsText:{
-        fontSize:15,
-        color:'#ffffff',
-        fontFamily:'google-sans-medium'
-    },
-    totalReportsWrapper:{
-        position:'absolute',
-        right:15,
-        top:15,
-        alignItems:'center'
-    },
-    peopleSavedWrapper:{
-        position:'absolute',
-        left:radius*2,
-        top:radius*2,
-        alignItems:'center'
-    },
-    peopleSavedText:{
-        fontSize:15,
-        color:'white',
-        fontFamily:'google-sans-medium'
-    },
-    moneySavedWrapper:{
-        marginTop:20,
-        alignSelf:'center',
-        alignItems:'center'
-    },
-    moneySavedText:{
-        fontSize:15,
-        color:'#ffffff',
-        fontFamily:'google-sans-medium'
-    },
-    numberText:{
-        fontSize:25,
-        color:'#FFA733',
-        fontFamily:'google-sans-medium'
-    },
+ 
     starsWrapper:{
        flexDirection:'row'
     },
@@ -228,14 +194,28 @@ const styles = StyleSheet.create({
     },
     levelText:{
         fontSize:20,
-        color:'#8A8A8A',
+        color:'#ffff',
         fontFamily:'google-sans-medium'
     },
-    stats:{
-        marginTop:15,
-        height:height*0.366,
-        width:width/3*2,
-        backgroundColor:'#ffffff',
-        borderRadius:8,
-    }
+
+    countersWrapper:{
+        flex:1,
+        justifyContent:'center',
+        flexDirection:'column',
+        alignItems:'center'
+        
+    },
+    countersText:{
+        fontSize:18,
+        color:'#ffffff',
+        fontFamily:'google-sans-medium'
+    }, 
+    numberText:{
+        left:50,
+        fontSize:27,
+        left:'11%',
+        color:'#ffffff',
+        fontFamily:'google-sans-regular'
+    },
+    
 })

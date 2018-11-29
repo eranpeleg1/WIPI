@@ -178,6 +178,7 @@ const stylesGAC = StyleSheet.create({
         fontSize: 13,
         color: '#5d5d5d'
     },
+  
     separator: {
         height: 1
     },

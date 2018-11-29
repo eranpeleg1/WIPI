@@ -5,7 +5,7 @@ import React from "react";
 const goldStar =  ( <Icon
     name='ios-star'
     size={25}
-    color='#feec00'
+    color='#FFA733'
 />)
 
 

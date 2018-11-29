@@ -72,7 +72,7 @@ export default class AuthLoadingScreen extends React.Component {
                     wipi:userData,
                     firebase:user
                 }
-               this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {userObject}})
+               this.props.navigation.navigate({routeName: 'Settings', key: 'Settings', params: {userObject,rank:3}})
                this.props.navigation.navigate({routeName: 'Map', key: 'Map', params: {userObject}})
            }
            else {

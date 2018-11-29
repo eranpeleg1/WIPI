@@ -136,7 +136,7 @@ export default class HomeScreen extends Component {
 
             address = {
                 structured_formatting: {
-                    main_text: street + " " + name,
+                    main_text: name.includes(street) ? name : street + " " + name,
                     secondary_text: tempAddress.city + ", " + tempAddress.country
                 }
             }
