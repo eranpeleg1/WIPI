@@ -13,10 +13,27 @@ const getReports = async (self) => {
     await reports.once('value', snapshot => {
         const reports = snapshot.val().Reports
         const users = snapshot.val().Users
+        let bycicleOfficer = {};
+        let parkingOfficer = {};
+        let towingTruck = {};
+        if(reports!==undefined && reports!==null){
+            console.log('reports',reports);
 
-        let bycicleOfficer = _.map(_.values(_.merge(reports.bicycleOfficer, reports['bicycleOfficer-Locations'], users)),value => {value.reportType='bicycle officer'; return value})
-        let parkingOfficer = _.map(_.values(_.merge(reports.parkingOfficer, reports['parkingOfficer-Locations'],users)),value => {value.reportType='parking officer'; return value})
-        let towingTruck = _.map(_.values(_.merge(reports.towingTruck, reports['towingTruck-Locations'],users)),value => {value.reportType='towing truck'; return value})
+            if(reports.parkingOfficer  ){
+
+                parkingOfficer = _.map(_.values(_.merge(reports.parkingOfficer, reports['parkingOfficer-Locations'],users)),value => {value.reportType='parking officer'; return value})
+                }
+                if(reports.towingTruck  ){
+        
+                towingTruck = _.map(_.values(_.merge(reports.towingTruck, reports['towingTruck-Locations'],users)),value => {value.reportType='towing truck'; return value})
+                }
+                if(reports.bicycleOfficer ){
+                    bycicleOfficer = _.map(_.values(_.merge(reports.bicycleOfficer, reports['bicycleOfficer-Locations'], users)),value => {value.reportType='bicycle officer'; return value})
+        
+                } 
+        }
+       
+       
         self.setState({reports:_.filter(_.concat(parkingOfficer, bycicleOfficer, towingTruck),report=> report.l !== undefined)})
 
     })

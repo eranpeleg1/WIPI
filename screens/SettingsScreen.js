@@ -44,7 +44,6 @@ export default class SettingsScreen extends React.Component {
               
             })
         }).then(async (response) => {
-            
             const responseObj = await response.json();
             console.log('response obj is ', responseObj);
             this.setState(
@@ -71,7 +70,8 @@ export default class SettingsScreen extends React.Component {
         }
         return (
              
-            <View style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.content}>
             <NavigationEvents
                 onWillFocus={this.pollUserCounters}
             />
@@ -81,8 +81,8 @@ export default class SettingsScreen extends React.Component {
                         source ={{uri: photoURL}}
                     />
                 </View>
-                <View>
-                    <Text style={styles.titleText}>
+                <View style={styles.displayNameWrapper}>
+                    <Text style={styles.displayNameText}>
                         {this.state.user.displayName}
                     </Text>
                 </View>
@@ -98,7 +98,7 @@ export default class SettingsScreen extends React.Component {
                             {'Level:  Cool Kid'}
                         </Text>
                     </View>
-                    <View style='countersWrapper'>
+                <View style={styles.countersWrapper}>
                         <View style={styles.countersItem}>
                             <Text style={styles.numberText}>
                                 {this.state.user.counters.totalReports}
@@ -122,14 +122,14 @@ export default class SettingsScreen extends React.Component {
                             
 
                             <Text style={styles.numberText}>
-                                {`${this.state.user.counters.totalPeopleSaved * this.state.fineFactor}₪`}
+                                {`${this.state.user.counters.totalPeopleSaved * this.state.fineFactor}`}
                             </Text>
                             <Text style={styles.countersText}>
-                                {'Money Saved'}
+                                {'Shekels Saved'}
                             </Text>
                         </View>
                     </View>
-                    <View  style={styles.logoutWrapper}>
+                <View style={styles.logoutWrapper}>
                         <Icon.Button
                             name="sign-out"
                             onPress={()=>firebase.auth().signOut()}
@@ -139,20 +139,23 @@ export default class SettingsScreen extends React.Component {
                             iconRight={false}>{space+'Logout'}
                         </Icon.Button>
                     </View>
-            </View>)
+          </View>
+        </View>)
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-
         flex: 1,
         flexDirection:'column',
-        justifyContent:'center',
+        justifyContent:'space-around',
         alignItems: 'center',
-        paddingTop: Constants.statusBarHeight,
-        backgroundColor: '#3c9bff',
-        
+        backgroundColor: '#3c9bff', 
+    },
+    content:{
+        flexDirection:'column',
+        height:'70%',
+        alignItems:'center'
     },
     picture: {
         resizeMode:'stretch',
@@ -161,14 +164,14 @@ const styles = StyleSheet.create({
         borderRadius:radius,
     },
     logoutButtonWrapper:{
-        top:20
+        flex:2,
     },
     logoutButton: {
         width: 200,
         height: 50,
         backgroundColor: "#FF6969",
     },
-    pictureWrapper:{
+    pictureWrapper:{        
         justifyContent:'center',
         alignItems:'center',
         width: delimiter+3,
@@ -177,8 +180,10 @@ const styles = StyleSheet.create({
         borderColor:'#ffffff',
         borderWidth: 3,
     },
-    titleText:{
-        margin:10,
+    displayNameWrapper:{
+        flex:2
+    },
+    displayNameText:{
         fontWeight:'bold',
         fontSize:25,
         color:'#ffffff',
@@ -189,20 +194,19 @@ const styles = StyleSheet.create({
        flexDirection:'row'
     },
     rankWrapper:{
-        alignSelf:'center',
+        flex:4,
+        // alignSelf:'center',
         alignItems:'center',
     },
     levelText:{
-        fontSize:20,
+        fontSize:18,
         color:'#ffff',
         fontFamily:'google-sans-medium'
     },
 
     countersWrapper:{
-        flex:1,
-        justifyContent:'center',
-        flexDirection:'column',
-        alignItems:'center'
+        flex:7,
+        flexDirection:'row',
         
     },
     countersText:{
@@ -211,11 +215,15 @@ const styles = StyleSheet.create({
         fontFamily:'google-sans-medium'
     }, 
     numberText:{
-        left:50,
-        fontSize:27,
-        left:'11%',
+        fontSize:20,
         color:'#ffffff',
         fontFamily:'google-sans-regular'
     },
-    
+    countersItem:{
+        flex:1,
+    // marginRight:15,
+    flexDirection:'column',
+    // justifyContent:'space-around',
+    alignItems:'center'
+    }
 })
