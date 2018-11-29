@@ -44,24 +44,23 @@ SettingsStack.navigationOptions = {
     ),
 }
 
-const NotificationsStack = createStackNavigator
-    (
-        { Notifications: LinksScreen },
-        {initialRouteKey: 'Notifications', initialRouteName: 'Notifications'}
-    )
+// const NotificationsStack = createStackNavigator
+//     (
+//         { Notifications: LinksScreen },
+//         {initialRouteKey: 'Notifications', initialRouteName: 'Notifications'}
+//     )
 
-NotificationsStack.navigationOptions = {
-    tabBarLabel: 'Notifications',
-    tabBarIcon: ({ focused }) => (
-        <TabBarIcon
-            focused={focused}
-            name={'notifications'}
-        />
-    )
-}
+// NotificationsStack.navigationOptions = {
+//     tabBarLabel: 'Notifications',
+//     tabBarIcon: ({ focused }) => (
+//         <TabBarIcon
+//             focused={focused}
+//             name={'notifications'}
+//         />
+//     )
+// }
 
 export default createBottomTabNavigator({
-    MapStack,
     SettingsStack,
-    NotificationsStack,
+    MapStack,
 })
