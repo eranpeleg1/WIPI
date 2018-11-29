@@ -192,7 +192,7 @@ export default class HomeScreen extends Component {
                                             ref={map => this.map = map}
                                             customMapStyle={mapStyle}
  
-                                            style={{alignSelf: 'stretch', height: height, zIndex: 1, elevation:1}}
+                                            style={{alignSelf: 'stretch', height: height}}
                                             region={this.state.mapRegion}
                                             showsUserLocation={true}
                                             showsMyLocationButton={false}

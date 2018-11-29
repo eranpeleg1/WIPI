@@ -30,11 +30,11 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.WIPI.WIPI",
+      "bundleIdentifier": "com.WIPI.WIPI2",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.WIPI.WIPI",
+      "package": "com.WIPI.WIPI2",
       "config": {
         "googleSignIn": {
           "certificateHash": "878CFEF53BE9BA32BE70ADB1CD32AC38877D1F17",
