@@ -75,7 +75,7 @@ export default class HomeScreen extends Component {
     state = {
         mapRegion: null,
         hasLocationPermissions: false,
-        location: null,
+        location: {latitude:32.109333,longitude:34.855499},
         parkingMode: false,
         address: null,
         loggedInUser: this.props.navigation.state.params.userObject,
@@ -187,19 +187,11 @@ export default class HomeScreen extends Component {
         switch (this.state.mode) {
             case 'default':
                 res =
-                    (<View style={styles.container}>
-                            {
-                                this.state.location === null
-                                    ?
-                                    <Text>Finding your current location...</Text> :
-                                    this.state.hasLocationPermissions === false ?
-                                        <Text>Map region doesn't exist.</Text>
-                                        :
+                    (<View style={styles.container}>                        
                                         <MapView
                                             ref={map => this.map = map}
-                                            provider="google"
                                             customMapStyle={mapStyle}
-                                            style={{alignSelf: 'stretch', height: height, zIndex: 0}}
+                                            style={{alignSelf: 'stretch', height: height, zIndex: 1,elevation:1}}
                                             region={this.state.mapRegion}
                                             showsUserLocation={true}
                                             showsMyLocationButton={false}
@@ -272,7 +264,7 @@ export default class HomeScreen extends Component {
                                                 })}
                                         </MapView>
 
-                            }
+                            
 
                             <SubView showValue={300}
                                      hideValue={50}
@@ -414,10 +406,10 @@ const styles = StyleSheet.create({
         marginTop: 7.5,
         marginLeft: 8,
         marginRight: 8,
-        height: 40,
+        height: 30,
         color: '#5d5d5d',
         fontSize: 16,
-        paddingBottom: 15,
+        paddingBottom: 7,
         margin: 0,
         bottom: 1,
         textAlign: 'right'

@@ -65,7 +65,8 @@ export default class AuthLoadingScreen extends React.Component {
                         photoURL,
                         email
                     }
-                    this.createNewUserInstance(userData)
+                    await this.createNewUserInstance(userData)
+                    
                 }
                 const userObject = {
                     wipi:userData,

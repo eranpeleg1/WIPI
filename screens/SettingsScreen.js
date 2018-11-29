@@ -140,32 +140,12 @@ export default class SettingsScreen extends React.Component {
     }
 }
 
-
-
-/**
- *
- *
- *  <Image
- source ={{uri: goldStar}}/>
- {this.state.user.rank>1 ? ( <Image
-                                source = {require('../assets/svgs/Star.svg')}/>):( <Image
-                                source ={require('../assets/svgs/StarBlue.svg')}/>)}
- {this.state.user.rank>2 ? ( <Image
-                                source ={require('../assets/svgs/Star.svg')}/>):( <Image
-                                source ={require('../assets/svgs/StarBlue.svg')}/>)}
- {this.state.user.rank>3 ? ( <Image
-                                source ={require('../assets/svgs/Star.svg')}/>):( <Image
-                                source ={require('../assets/svgs/StarBlue.svg')}/>)}
- {this.state.user.rank>4 ? ( <Image
-                                source ={require('../assets/svgs/Star.svg')}/>):( <Image
-                                source ={require('../assets/svgs/StarBlue.svg')}/>)}
- */
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent:'center',
         alignItems: 'center',
-        paddingTop: Constants.statusBarHeight,
+        // paddingTop: Constants.statusBarHeight,
         backgroundColor: '#3c9bff',
         
     },
@@ -196,7 +176,7 @@ const styles = StyleSheet.create({
         borderWidth: 3
     },
     titleText:{
-        margin:5,
+        margin:15,
         fontWeight:'bold',
         fontSize:25,
         color:'#ffffff',
@@ -215,13 +195,13 @@ const styles = StyleSheet.create({
     },
     peopleSavedWrapper:{
         position:'absolute',
-        left:30,
-        top:30,
+        left:radius*2,
+        top:radius*2,
         alignItems:'center'
     },
     peopleSavedText:{
         fontSize:15,
-        color:'#FFA733',
+        color:'white',
         fontFamily:'google-sans-medium'
     },
     moneySavedWrapper:{
