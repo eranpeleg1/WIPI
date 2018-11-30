@@ -35,7 +35,6 @@ const getReports = async (self) => {
 
         const allReports = _.filter(_.concat(parkingOfficer, bycicleOfficer, towingTruck),report=> report.l !== undefined)
        if (self.state.reports.length !== allReports.length) {
-           console. log('bbbbbbb', allReports)
            self.setState({reports:allReports})
        }
 
