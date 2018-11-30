@@ -32,9 +32,11 @@ const getReports = async (self) => {
         
                 } 
         }
-       
-       
-        self.setState({reports:_.filter(_.concat(parkingOfficer, bycicleOfficer, towingTruck),report=> report.l !== undefined)})
+
+        const allReports = _.filter(_.concat(parkingOfficer, bycicleOfficer, towingTruck),report=> report.l !== undefined)
+       if (self.state.reports.length !== allReports.length) {
+           self.setState({reports:allReports})
+       }
 
     })
 }
